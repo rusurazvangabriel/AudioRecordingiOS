@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */; };
+		8C0A8FDB18E2D0F700C7C815 /* bgImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDA18E2D0F700C7C815 /* bgImage.jpg */; };
+		8C0A8FDD18E2D72D00C7C815 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */; };
+		8C0A8FDF18E2D73900C7C815 /* RecordNormalImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */; };
+		8C0A8FE318E2EBEE00C7C815 /* navbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE218E2EBEE00C7C815 /* navbar.png */; };
+		8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */; };
+		8C0A8FE918E2FB8400C7C815 /* Play-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */; };
+		8C0A8FEA18E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE618E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png */; };
+		8C0A8FEB18E2FB8400C7C815 /* Play-Disabled-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE718E2FB8400C7C815 /* Play-Disabled-icon.png */; };
 		8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */; };
 		8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */; };
 		8CDE7BAD18D0C21C0082FE17 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BAC18D0C21C0082FE17 /* Foundation.framework */; };
@@ -36,6 +45,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8C0A8FD718E2CC1200C7C815 /* RecordingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordingViewController.h; sourceTree = "<group>"; };
+		8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordingViewController.m; sourceTree = "<group>"; };
+		8C0A8FDA18E2D0F700C7C815 /* bgImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bgImage.jpg; sourceTree = "<group>"; };
+		8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordPressedImage.png; sourceTree = "<group>"; };
+		8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordNormalImage.png; sourceTree = "<group>"; };
+		8C0A8FE218E2EBEE00C7C815 /* navbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navbar.png; sourceTree = "<group>"; };
+		8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Stop-Normal-Red-icon.png"; sourceTree = "<group>"; };
+		8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Play-Pressed-icon.png"; sourceTree = "<group>"; };
+		8C0A8FE618E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Stop-Pressed-Blue-icon.png"; sourceTree = "<group>"; };
+		8C0A8FE718E2FB8400C7C815 /* Play-Disabled-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Play-Disabled-icon.png"; sourceTree = "<group>"; };
 		8C0F5CFA18D9A4B0007A6599 /* SampleListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleListViewController.h; sourceTree = "<group>"; };
 		8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleListViewController.m; sourceTree = "<group>"; };
 		8C0F5CFD18D9A86F007A6599 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -85,6 +104,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8C0A8FEC18E2FB8F00C7C815 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */,
+				8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */,
+				8C0A8FE618E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png */,
+				8C0A8FE718E2FB8400C7C815 /* Play-Disabled-icon.png */,
+				8C0A8FE218E2EBEE00C7C815 /* navbar.png */,
+				8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */,
+				8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */,
+				8C0A8FDA18E2D0F700C7C815 /* bgImage.jpg */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		8CDE7BA018D0C21C0082FE17 = {
 			isa = PBXGroup;
 			children = (
@@ -118,12 +152,13 @@
 		8CDE7BB218D0C21C0082FE17 /* AudioRecording */ = {
 			isa = PBXGroup;
 			children = (
+				8C0A8FEC18E2FB8F00C7C815 /* Images */,
+				8C0A8FD718E2CC1200C7C815 /* RecordingViewController.h */,
+				8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */,
 				8C0F5CFD18D9A86F007A6599 /* AppDelegate.h */,
 				8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */,
 				8C0F5CFA18D9A4B0007A6599 /* SampleListViewController.h */,
 				8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */,
-				8CDE7BE218D0CCB30082FE17 /* AudioPlayerViewController.h */,
-				8CDE7BE318D0CCB30082FE17 /* AudioPlayerViewController.m */,
 				8CDE7BBE18D0C21C0082FE17 /* Main.storyboard */,
 				8CDE7BC118D0C21C0082FE17 /* ViewController.h */,
 				8CDE7BC218D0C21C0082FE17 /* ViewController.m */,
@@ -136,6 +171,8 @@
 		8CDE7BB318D0C21C0082FE17 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8CDE7BE218D0CCB30082FE17 /* AudioPlayerViewController.h */,
+				8CDE7BE318D0CCB30082FE17 /* AudioPlayerViewController.m */,
 				8CDE7BB418D0C21C0082FE17 /* AudioRecording-Info.plist */,
 				8CDE7BB518D0C21C0082FE17 /* InfoPlist.strings */,
 				8CDE7BB818D0C21C0082FE17 /* main.m */,
@@ -241,9 +278,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C0A8FE918E2FB8400C7C815 /* Play-Pressed-icon.png in Resources */,
 				8CDE7BC518D0C21C0082FE17 /* Images.xcassets in Resources */,
+				8C0A8FDD18E2D72D00C7C815 /* RecordPressedImage.png in Resources */,
 				8CDE7BB718D0C21C0082FE17 /* InfoPlist.strings in Resources */,
+				8C0A8FDB18E2D0F700C7C815 /* bgImage.jpg in Resources */,
+				8C0A8FEB18E2FB8400C7C815 /* Play-Disabled-icon.png in Resources */,
 				8CDE7BC018D0C21C0082FE17 /* Main.storyboard in Resources */,
+				8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */,
+				8C0A8FEA18E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png in Resources */,
+				8C0A8FDF18E2D73900C7C815 /* RecordNormalImage.png in Resources */,
+				8C0A8FE318E2EBEE00C7C815 /* navbar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +309,7 @@
 			files = (
 				8CDE7BC318D0C21C0082FE17 /* ViewController.m in Sources */,
 				8CDE7BE518D0CCB30082FE17 /* AudioPlayerViewController.m in Sources */,
+				8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CDE7BB918D0C21C0082FE17 /* main.m in Sources */,
 				8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */,

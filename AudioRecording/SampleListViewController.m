@@ -7,9 +7,9 @@
 //
 
 #import "SampleListViewController.h"
-#import "ViewController.h"
+#import "RecordingViewController.h"
 
-@interface SampleListViewController ()
+@interface SampleListViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @end
 
@@ -63,7 +63,7 @@
     [self.view.layer addAnimation:animation forKey:kCATransition];
     
     
-    ViewController * recordingView = [[ViewController alloc] init];
+    RecordingViewController * recordingView = [[RecordingViewController alloc] init];
     [self presentViewController:recordingView animated:YES completion:NULL];
 }
 
@@ -76,26 +76,53 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //returns number of rows
-    return 1;
+    return [sampleNamesArray count] - 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     //returns number of samples
-    return [sampleNamesArray count] - 1;
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 100.0;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    cell.textLabel.text = @"Play Sample";
+    static NSString* cellIdentifier = @"Cell";
+    
+    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    cell.backgroundColor = [UIColor orangeColor];
+    UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 60, 60)];
+    [playButton setTitle:@"Play" forState:normal];
+    playButton.backgroundColor = [UIColor greenColor];
+    playButton.layer.borderColor = [[UIColor blackColor] CGColor];
+    playButton.layer.borderWidth = 4;
+    playButton.layer.cornerRadius = 30;
 
+    [[cell contentView] addSubview:playButton];
+    
+    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,10,200,60)];
+    cellLabel.text = [sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
+    cellLabel.textColor = [UIColor blackColor];
+    
+    [[cell contentView] addSubview:cellLabel];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RecordingViewController * recordingView = [[RecordingViewController alloc] init];
+    NSString *testString = sampleNamesArray[indexPath.row];
+    [recordingView playRecording:testString];
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [sampleNamesArray objectAtIndex:section];
+    return @"Sample list";
 }
 
 - (NSString*) getSamplesNameContent{
