@@ -21,10 +21,8 @@
 {
     [super viewDidLoad];
     //self.view.backgroundColor = [UIColor greenColor];
-    
+    [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgImage.jpg"]];
-    
-
     
     _recordViewButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 60)];
     _recordViewButton.center = self.view.center;
@@ -44,7 +42,6 @@
     
     gradientLayer.cornerRadius = _recordViewButton.layer.cornerRadius;
     [_recordViewButton.layer addSublayer:gradientLayer];
-    _recordViewButton.tintColor = [UIColor purpleColor];
     _recordViewButton.layer.cornerRadius = 10;
     [_recordViewButton setTitle:@"Record" forState:normal];
     [_recordViewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -52,29 +49,18 @@
     [self.view addSubview:_recordViewButton];
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
 - (void)goToRecordingView
 {
     RecordingViewController * sampleList = [[RecordingViewController alloc] init];
-    [self presentViewController:sampleList animated:YES completion:NULL];
+    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController pushViewController:sampleList animated:YES];
 }
-
-//
-//- (void) swipeRight
-//{
-//    NSLog(@"Right swipe");
-//    
-//    CATransition *animation = [CATransition animation];
-//    [animation setDelegate:self];
-//    [animation setType:kCATransitionPush];
-//    [animation setSubtype:kCATransitionFromLeft];
-//    [animation setDuration:0.40];
-//    [animation setTimingFunction:
-//     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-//    [self.view.layer addAnimation:animation forKey:kCATransition];
-//    
-////    SampleListViewController * sampleList = [[SampleListViewController alloc] init];
-////    [self presentViewController:sampleList animated:YES completion:NULL];
-//}
 
 
 - (void)didReceiveMemoryWarning

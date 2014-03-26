@@ -10,7 +10,7 @@
 #import "RecordingViewController.h"
 
 @interface SampleListViewController () <UITableViewDataSource,UITableViewDelegate>
-
+@property(strong,nonatomic) RecordingViewController *rec;
 @end
 
 @implementation SampleListViewController
@@ -33,6 +33,8 @@
     [self.view addGestureRecognizer:swipeLeftToRecording];
     
     [super viewDidLoad];
+    _rec = [[RecordingViewController alloc] init];
+    
     NSLog(@"Second view");
 	// Do any additional setup after loading the view.
     
@@ -64,7 +66,8 @@
     
     
     RecordingViewController * recordingView = [[RecordingViewController alloc] init];
-    [self presentViewController:recordingView animated:YES completion:NULL];
+    [self.navigationController pushViewController:recordingView animated:YES];
+    //[self presentViewController:recordingView animated:YES completion:NULL];
 }
 
 - (void)didReceiveMemoryWarning
@@ -115,9 +118,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RecordingViewController * recordingView = [[RecordingViewController alloc] init];
+    
     NSString *testString = sampleNamesArray[indexPath.row];
-    [recordingView playRecording:testString];
+    [_rec playRecording:testString];
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

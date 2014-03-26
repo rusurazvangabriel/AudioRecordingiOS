@@ -17,11 +17,15 @@
 @property (strong, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong, nonatomic) IBOutlet UIButton *restartRecording;
 @property (strong, nonatomic) IBOutlet UITextField *fileNameTextField;
+//@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) IBOutlet UILabel *counterLabel;
+@property(strong,nonatomic) RecordingViewController *rec;
+
 @end
 
 //global variable for sample index
 static int sampleIndex;
-
+static int counterValue;
 
 @implementation RecordingViewController
 
@@ -48,18 +52,22 @@ static int sampleIndex;
     
     [super viewDidLoad];
     
+    self.extendedLayoutIncludesOpaqueBars = YES;
     self.fileNameTextField.delegate = self;
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgImage.jpg"]];
     
-    //Hide status bar
-    shouldHideStatusBar = YES;
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                            withAnimation:UIStatusBarAnimationFade];
     self.flag = NO;
     
     //set the index of current recording session to 0
     sampleIndex = 0;
+    counterValue = 0;
+    
+    _counterLabel = [[UILabel alloc]initWithFrame:CGRectMake(45, 0, 40, 40)];
+    [_counterLabel setTextColor:[UIColor grayColor]];
+    _counterLabel.backgroundColor = [UIColor clearColor];
+    [_counterLabel setText:[NSString stringWithFormat:@"%d",counterValue]];
+    [self.view addSubview:_counterLabel];
+    _counterLabel.hidden = YES;
     
     _recordButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
     _recordButton.center = self.view.center;
@@ -79,8 +87,9 @@ static int sampleIndex;
     [_playButton addTarget:self action:@selector(buttonPlay) forControlEvents:UIControlEventTouchUpInside];
     _playButton.hidden = YES;
     
-    _fileNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 10, self.view.frame.size.width - 20, 40)];
+    _fileNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 60, self.view.frame.size.width - 20, 40)];
     _fileNameTextField.backgroundColor = [UIColor whiteColor];
+    _fileNameTextField.text = @"";
     [self.view addSubview:_fileNameTextField];
     _fileNameTextField.hidden = YES;
     
@@ -99,7 +108,14 @@ static int sampleIndex;
     [self.view addSubview:_restartRecording];
     [_restartRecording addTarget:self action:@selector(recordAgainButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     _restartRecording.hidden = YES;
+    
+
 }
+
+//- (void)updateLabel:(id)sender{
+//	self.counterLabel.text = [NSString stringWithFormat:@"%d", counterValue];
+//	counterValue++;
+//}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     //hides keyboard when another part of layout was touched
@@ -133,21 +149,16 @@ static int sampleIndex;
     [self presentViewController:sampleList animated:YES completion:NULL];
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return shouldHideStatusBar;
-}
-
 - (void) recordButtonPressed
 {
     if(self.flag == NO)
     {
-        //[_recordButton setTitle:@"Stop" forState:normal];
+        _counterLabel.hidden = NO;
         [self startRecording];
         self.flag = YES;
     }
     else
     {
-        //[_recordButton setTitle:@"Record" forState:normal];
         [self stopRecording];
         _fileNameTextField.hidden = NO;
         _playButton.hidden = NO;
@@ -165,6 +176,13 @@ static int sampleIndex;
 
 -(void) startRecording
 {
+    counterValue = 0;
+//    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+//                                              target:self
+//                                            selector:@selector(updateLabel:)
+//                                            userInfo:nil
+//                                             repeats:YES ];
+//    
     NSLog(@"startRecording");
     audioRecorder = nil;
     
@@ -224,28 +242,7 @@ static int sampleIndex;
     [samplePath appendString:sampleName];
     currentRecordingSample = sampleName;
     
-    /*-----------------------Creating a csv file for holding sample names-----------------*/
-    
-    //    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-    //
-    //    NSString *sampleNamesFile = [docPath stringByAppendingPathComponent:@"samples.csv"];
-    //    NSString *newLine = @"\n";
-    //    if(![[NSFileManager defaultManager]fileExistsAtPath:sampleNamesFile])
-    //    {
-    //        [[NSFileManager defaultManager] createFileAtPath:sampleNamesFile contents:nil attributes:nil];
-    //    }
-    //    NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:sampleNamesFile];
-    //    [fileHandle seekToEndOfFile];
-    //    [fileHandle writeData:[sampleName dataUsingEncoding:NSUTF8StringEncoding]];
-    //    [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
-    //    [fileHandle closeFile];
-    
-    /*-----------------------------End writting to the file-------------------------------*/
-    
-    
     NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:samplePath, basePath]];
-    // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/recordTest.caf", [[NSBundle mainBundle] resourcePath]]];
-    
     
     NSError *error = nil;
     audioRecorder = [[ AVAudioRecorder alloc] initWithURL:url settings:recordSettings error:&error];
@@ -262,14 +259,19 @@ static int sampleIndex;
 
 -(void) stopRecording
 {
+    
     NSLog(@"stopRecording");
     [audioRecorder stop];
+//    if(_timer){
+//		[_timer invalidate];
+//		_timer = nil;
+//	}
     NSLog(@"stopped");
 }
 
 - (void)saveSample
 {
-    if(_fileNameTextField.text != NULL)
+    if(![_fileNameTextField.text  isEqualToString: @""])
     {
         NSLog(@"SaveFile");
         NSString *sampleName = [NSString stringWithFormat:@"%@.caf",_fileNameTextField.text];
@@ -293,6 +295,9 @@ static int sampleIndex;
         [fileHandle writeData:[sampleName dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandle closeFile];
+        _fileNameTextField.text = @"";
+        SampleListViewController *sampleList = [[SampleListViewController alloc] init];
+        [self.navigationController pushViewController:sampleList animated:YES];
     }
 }
 
@@ -303,29 +308,16 @@ static int sampleIndex;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
     
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *basePath = paths[0];
     
-    //NSString *indexString = [NSString stringWithFormat:@"%d", sampleIndex];
-    
-    
-    //    NSMutableString *samplePath = [[NSMutableString alloc]init];
-    //
-    //    [samplePath appendString:@"%@/sample0.caf"];
-    //    //[samplePath appendFormat:@"%d",sampleIndex];
-    //    [samplePath appendString:forSampleName];
-    
     NSString * samplePath = [NSString stringWithFormat:@"%@/%@",basePath,sampleName];
-    
-    //sampleIndex++;
     
     NSURL *url = [NSURL fileURLWithPath:samplePath];
     NSError *error;
     audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     audioPlayer.numberOfLoops = 0;
     [audioPlayer play];
-    
     NSLog(@"playing");
 }
 
@@ -340,28 +332,6 @@ static int sampleIndex;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-//Method retrieves content from documents directory and
-//displays it in an alert
-
--(void) displayContent{
-    
-    NSLog(@"DisplayContent");
-    
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-    NSString *sampleNameFile = [docPath stringByAppendingString:@"/samples.csv"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:sampleNameFile])
-    {
-        NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:sampleNameFile];
-        NSString *sampleList = [[NSString alloc] initWithData:[fileHandle availableData] encoding:NSUTF8StringEncoding];
-        [fileHandle closeFile];
-        
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Alerta" message:sampleList delegate:self cancelButtonTitle:@"Stop" otherButtonTitles:nil];
-        [alert show];
-    }
-    [audioPlayer stop];
 }
 
 
