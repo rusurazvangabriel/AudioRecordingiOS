@@ -4,20 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>AudioRecording.xcscheme</key>
+		<key>AFNetworking iOS Example.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>8CDE7BA818D0C21C0082FE17</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8CDE7BC918D0C21C0082FE17</key>
+		<key>F8E4695F1395739C00DB05C8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

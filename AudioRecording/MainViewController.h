@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "RRButton.h"
+#import <objc/message.h>
 
 @interface ViewController : UIViewController <UIGestureRecognizerDelegate>
 

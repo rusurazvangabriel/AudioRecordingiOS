@@ -8,24 +8,26 @@
 
 #import "RecordingViewController.h"
 #import "SampleListViewController.h"
+#import "AFNetworking.h"
+#import "AudioPlayer.h"
 
 @interface RecordingViewController ()
 
 @property BOOL flag;
-@property (strong, nonatomic) IBOutlet UIButton *recordButton;
-@property (strong, nonatomic) IBOutlet UIButton *playButton;
-@property (strong, nonatomic) IBOutlet UIButton *saveButton;
-@property (strong, nonatomic) IBOutlet UIButton *restartRecording;
-@property (strong, nonatomic) IBOutlet UITextField *fileNameTextField;
-//@property (strong, nonatomic) NSTimer *timer;
-@property (strong, nonatomic) IBOutlet UILabel *counterLabel;
-@property(strong,nonatomic) RecordingViewController *rec;
+@property (strong, nonatomic)  UIButton *recordButton;
+@property (strong, nonatomic)  UIButton *playButton;
+@property (strong, nonatomic)  UIButton *saveButton;
+@property (strong, nonatomic)  UIButton *restartRecording;
+@property (strong, nonatomic)  RRTextField *fileNameTextField;
+@property (strong,nonatomic) UITextView *recordingStatusLabel;
+@property (strong, nonatomic) SampleListViewController *sampleList;
+@property(strong,nonatomic) AudioPlayer *player;
+@property(nonatomic,assign, getter = isFrameUp) BOOL frameUp;
 
 @end
 
 //global variable for sample index
 static int sampleIndex;
-static int counterValue;
 
 @implementation RecordingViewController
 
@@ -38,36 +40,32 @@ static int counterValue;
     return self;
 }
 
+
 - (void)viewDidLoad
 {
-    /*
-     * Create swipe right gesture so you can navigate
-     * to sample preview viewController
-     */
-    
-    UISwipeGestureRecognizer *swipeRightToSamples = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
-    swipeRightToSamples.numberOfTouchesRequired = 1;
-    swipeRightToSamples.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeRightToSamples];
     
     [super viewDidLoad];
+    self.frameUp = NO;
     
-    self.extendedLayoutIncludesOpaqueBars = YES;
+    _player = [[AudioPlayer alloc] init];
+    self.title = @"Record";
     self.fileNameTextField.delegate = self;
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgImage.jpg"]];
-    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
     self.flag = NO;
+    _sampleList = [[SampleListViewController alloc] init];
+    
     
     //set the index of current recording session to 0
     sampleIndex = 0;
-    counterValue = 0;
     
-    _counterLabel = [[UILabel alloc]initWithFrame:CGRectMake(45, 0, 40, 40)];
-    [_counterLabel setTextColor:[UIColor grayColor]];
-    _counterLabel.backgroundColor = [UIColor clearColor];
-    [_counterLabel setText:[NSString stringWithFormat:@"%d",counterValue]];
-    [self.view addSubview:_counterLabel];
-    _counterLabel.hidden = YES;
+    float X_Co = (self.view.frame.size.width - 240)/2;
+    
+    _recordingStatusLabel = [[UITextView alloc] initWithFrame:CGRectMake(X_Co, 130, 240, 80)];
+    _recordingStatusLabel.text = @"Press The Button to record";
+    _recordingStatusLabel.textAlignment = NSTextAlignmentCenter;
+    _recordingStatusLabel.backgroundColor = [UIColor clearColor];
+    [_recordingStatusLabel setTextColor:[UIColor darkGrayColor]];
+    [self.view addSubview:_recordingStatusLabel];
     
     _recordButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
     _recordButton.center = self.view.center;
@@ -87,44 +85,57 @@ static int counterValue;
     [_playButton addTarget:self action:@selector(buttonPlay) forControlEvents:UIControlEventTouchUpInside];
     _playButton.hidden = YES;
     
-    _fileNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 60, self.view.frame.size.width - 20, 40)];
-    _fileNameTextField.backgroundColor = [UIColor whiteColor];
+    _fileNameTextField = [[RRTextField alloc] initWithCoordinates:X_Co y:self.view.frame.size.height - 185];
+    _fileNameTextField.placeholder = @"Sample name";
     _fileNameTextField.text = @"";
+    _fileNameTextField.delegate = self;
+    _fileNameTextField.returnKeyType = UIReturnKeyDone;
     [self.view addSubview:_fileNameTextField];
     _fileNameTextField.hidden = YES;
     
-    _saveButton = [[UIButton alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height - 60, 120, 50)];
+    _saveButton = [[UIButton alloc] initWithFrame:CGRectMake(X_Co, self.view.frame.size.height - 140, 240, 35)];
+    _saveButton.backgroundColor = [UIColor colorWithRed:0/255.0f green:140/255.0f blue:255/255.0f alpha:1.0f];
+    _saveButton.layer.cornerRadius = 7.0f;
+    _saveButton.layer.shadowRadius = 3.0f;
+    _saveButton.layer.borderWidth = 0.3f;
+    _saveButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    _saveButton.layer.shadowOffset = CGSizeMake(2.0f, 3.0f);
+    _saveButton.layer.shadowOpacity = 0.8f;
+    _saveButton.layer.masksToBounds = NO;
+    [_saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_saveButton setTitle:@"Save" forState:normal];
-    [_saveButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    _saveButton.backgroundColor = [UIColor grayColor];
     [self.view addSubview:_saveButton];
     [_saveButton addTarget:self action:@selector(saveSample) forControlEvents:UIControlEventTouchUpInside];
     _saveButton.hidden = YES;
     
-    _restartRecording = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 140, self.view.frame.size.height - 60, 120, 50)];
+    _restartRecording = [[UIButton alloc] initWithFrame:CGRectMake(X_Co, self.view.frame.size.height - 95, 240, 35)];
+    _restartRecording.backgroundColor = [UIColor colorWithRed:0/255.0f green:140/255.0f blue:255/255.0f alpha:1.0f];
+    _restartRecording.layer.cornerRadius = 7.0f;
+    _restartRecording.layer.shadowRadius = 3.0f;
+    _restartRecording.layer.borderWidth = 0.3f;
+    _restartRecording.layer.shadowColor = [UIColor blackColor].CGColor;
+    _restartRecording.layer.shadowOffset = CGSizeMake(2.0f, 3.0f);
+    _restartRecording.layer.shadowOpacity = 0.8f;
+    _restartRecording.layer.masksToBounds = NO;
+    [_restartRecording setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_restartRecording setTitle:@"Rec_A" forState:normal];
-    [_restartRecording setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    _restartRecording.backgroundColor = [UIColor grayColor];
     [self.view addSubview:_restartRecording];
     [_restartRecording addTarget:self action:@selector(recordAgainButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     _restartRecording.hidden = YES;
-    
-
+    //[self downloadSample];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/bass.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/drums.wav"];
 }
 
-//- (void)updateLabel:(id)sender{
-//	self.counterLabel.text = [NSString stringWithFormat:@"%d", counterValue];
-//	counterValue++;
-//}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    //hides keyboard when another part of layout was touched
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 - (void) recordAgainButtonPressed
 {
+    self.title = @"Record";
+    _recordingStatusLabel.text = @"Press THE BUTTON to record";
     _recordButton.hidden = NO;
     _playButton.hidden = YES;
     _saveButton.hidden = YES;
@@ -132,34 +143,20 @@ static int counterValue;
     _fileNameTextField.hidden = YES;
 }
 
-- (void) swipeRight
-{
-    NSLog(@"Right swipe");
-    
-    CATransition *animation = [CATransition animation];
-    [animation setDelegate:self];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromLeft];
-    [animation setDuration:0.40];
-    [animation setTimingFunction:
-     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.layer addAnimation:animation forKey:kCATransition];
-    
-    SampleListViewController * sampleList = [[SampleListViewController alloc] init];
-    [self presentViewController:sampleList animated:YES completion:NULL];
-}
-
 - (void) recordButtonPressed
 {
     if(self.flag == NO)
     {
-        _counterLabel.hidden = NO;
-        [self startRecording];
+        self.title = @"Record";
+        [_player startRecording];
         self.flag = YES;
     }
     else
     {
-        [self stopRecording];
+        self.title = @"Play";
+        _fileNameTextField.text = @"";
+        _recordingStatusLabel.text = @"Play sample";
+        [_player stopRecording];
         _fileNameTextField.hidden = NO;
         _playButton.hidden = NO;
         _saveButton.hidden = NO;
@@ -171,110 +168,16 @@ static int counterValue;
 
 -(void) buttonPlay
 {
-    [self playRecording:currentRecordingSample];
-}
-
--(void) startRecording
-{
-    counterValue = 0;
-//    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
-//                                              target:self
-//                                            selector:@selector(updateLabel:)
-//                                            userInfo:nil
-//                                             repeats:YES ];
-//    
-    NSLog(@"startRecording");
-    audioRecorder = nil;
-    
-    // Init audio with record capability
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
-    
-    NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] initWithCapacity:10];
-    if(recordEncoding == ENC_PCM)
-    {
-        [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatLinearPCM] forKey: AVFormatIDKey];
-        [recordSettings setObject:[NSNumber numberWithFloat:44100.0] forKey: AVSampleRateKey];
-        [recordSettings setObject:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
-        [recordSettings setObject:[NSNumber numberWithInt:16] forKey:AVLinearPCMBitDepthKey];
-        [recordSettings setObject:[NSNumber numberWithBool:NO] forKey:AVLinearPCMIsBigEndianKey];
-        [recordSettings setObject:[NSNumber numberWithBool:NO] forKey:AVLinearPCMIsFloatKey];
-    }
-    else
-    {
-        NSNumber *formatObject;
-        
-        switch (recordEncoding) {
-            case (ENC_AAC):
-                formatObject = [NSNumber numberWithInt: kAudioFormatMPEG4AAC];
-                break;
-            case (ENC_ALAC):
-                formatObject = [NSNumber numberWithInt: kAudioFormatAppleLossless];
-                break;
-            case (ENC_IMA4):
-                formatObject = [NSNumber numberWithInt: kAudioFormatAppleIMA4];
-                break;
-            case (ENC_ILBC):
-                formatObject = [NSNumber numberWithInt: kAudioFormatiLBC];
-                break;
-            case (ENC_ULAW):
-                formatObject = [NSNumber numberWithInt: kAudioFormatULaw];
-                break;
-            default:
-                formatObject = [NSNumber numberWithInt: kAudioFormatAppleIMA4];
-        }
-        
-        [recordSettings setObject:formatObject forKey: AVFormatIDKey];
-        [recordSettings setObject:[NSNumber numberWithFloat:44100.0] forKey: AVSampleRateKey];
-        [recordSettings setObject:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
-        //[recordSettings setObject:[NSNumber numberWithInt:12800] forKey:AVEncoderBitRateKey];
-        [recordSettings setObject:[NSNumber numberWithInt:16] forKey:AVLinearPCMBitDepthKey];
-        [recordSettings setObject:[NSNumber numberWithInt: AVAudioQualityHigh] forKey: AVEncoderAudioQualityKey];
-    }
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); NSString *basePath = paths[0];
-    
-    /*------------------------Creating a filename for current recording-------------------*/
-    
-    NSString *sampleName = [NSString stringWithFormat:@"sample%d.caf",sampleIndex];
-    NSMutableString *samplePath = [[NSMutableString alloc]init];
-    [samplePath appendString:@"%@/"];
-    [samplePath appendString:sampleName];
-    currentRecordingSample = sampleName;
-    
-    NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:samplePath, basePath]];
-    
-    NSError *error = nil;
-    audioRecorder = [[ AVAudioRecorder alloc] initWithURL:url settings:recordSettings error:&error];
-    
-    if ([audioRecorder prepareToRecord] == YES){
-        [audioRecorder record];
-    }else {
-        int errorCode = CFSwapInt32HostToBig ([error code]);
-        NSLog(@"Error: %@ [%4.4s])" , [error localizedDescription], (char*)&errorCode);
-        
-    }
-    NSLog(@"recording");
-}
-
--(void) stopRecording
-{
-    
-    NSLog(@"stopRecording");
-    [audioRecorder stop];
-//    if(_timer){
-//		[_timer invalidate];
-//		_timer = nil;
-//	}
-    NSLog(@"stopped");
+    [_player startPlaying:@"tempSample.caf" numberOfLoops:0 volumeLevel:1.0f];
 }
 
 - (void)saveSample
 {
-    if(![_fileNameTextField.text  isEqualToString: @""])
+    if(![_fileNameTextField.text isEqualToString: @""])
     {
         NSLog(@"SaveFile");
-        NSString *sampleName = [NSString stringWithFormat:@"%@.caf",_fileNameTextField.text];
+        
+        NSString *tempSampleName = [NSString stringWithFormat:@"%@.caf",_fileNameTextField.text];
         NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
         NSString *sampleNamesFile = [docPath stringByAppendingPathComponent:@"samples.csv"];
         NSString *newLine = @"\n";
@@ -282,7 +185,7 @@ static int counterValue;
         NSError * err = NULL;
         NSFileManager * fm = [[NSFileManager alloc] init];
         
-        BOOL result = [fm moveItemAtPath:[docPath stringByAppendingPathComponent:currentRecordingSample] toPath:[docPath stringByAppendingPathComponent:sampleName] error:&err];
+        BOOL result = [fm moveItemAtPath:[docPath stringByAppendingPathComponent:@"tempSample.caf"] toPath:[docPath stringByAppendingPathComponent:tempSampleName] error:&err];
         if(!result)
             NSLog(@"Error: %@", err);
         
@@ -292,40 +195,75 @@ static int counterValue;
         }
         NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:sampleNamesFile];
         [fileHandle seekToEndOfFile];
-        [fileHandle writeData:[sampleName dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle writeData:[tempSampleName dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandle closeFile];
-        _fileNameTextField.text = @"";
-        SampleListViewController *sampleList = [[SampleListViewController alloc] init];
-        [self.navigationController pushViewController:sampleList animated:YES];
+        [self.navigationController pushViewController:_sampleList animated:YES];
     }
 }
 
--(void) playRecording:(NSString *)sampleName
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    NSLog(@"playRecording");
-    // Init audio with playback capability
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *basePath = paths[0];
-    
-    NSString * samplePath = [NSString stringWithFormat:@"%@/%@",basePath,sampleName];
-    
-    NSURL *url = [NSURL fileURLWithPath:samplePath];
-    NSError *error;
-    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-    audioPlayer.numberOfLoops = 0;
-    [audioPlayer play];
-    NSLog(@"playing");
+    if (![_fileNameTextField.text isEqualToString:@""]) {
+        [_fileNameTextField resignFirstResponder];
+        [UIView animateWithDuration:0.3 animations:^{
+            self.view.center = CGPointMake(self.view.center.x, self.view.center.y + 216);
+            self.frameUp = NO;
+        }];
+    }
+    return NO;
 }
 
--(void) stopPlaying
+- (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    NSLog(@"stopPlaying");
-    [audioPlayer stop];
-    NSLog(@"stopped");
+    if (!self.isFrameUp) {
+        self.frameUp  = YES;
+        [UIView animateWithDuration:0.3  animations:^{
+            self.view.center = CGPointMake(self.view.center.x, self.view.center.y - 216);
+        }];
+    }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationPortrait);
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self recordAgainButtonPressed];
+}
+//        NSData *file1Data = [[NSData alloc] initWithContentsOfFile:[docPath stringByAppendingString:sampleName]];
+//        NSString *urlString = @"http://app.etajul9.ro/mysql_query1.php";
+//
+//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+//        [request setURL:[NSURL URLWithString:urlString]];
+//        [request setHTTPMethod:@"POST"];
+//
+//        NSString *boundary = @"---------------------------14737809831466499882746641449";
+//        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+//        [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+//
+//        NSMutableData *body = [NSMutableData data];
+//        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//
+//        [body appendData:[[NSString stringWithString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"userfile\"; filename=\"%@\"\r\n",sampleName]] dataUsingEncoding:NSUTF8StringEncoding]];
+//
+//        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+//        [body appendData:[NSData dataWithData:file1Data]];
+//        [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+//
+//        [request setHTTPBody:body];
+//
+//        NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+//        NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+//
+//        NSLog(@"Return String= %@",returnString);
+
+- (void)uploadFile
+{
+    
 }
 
 - (void)didReceiveMemoryWarning

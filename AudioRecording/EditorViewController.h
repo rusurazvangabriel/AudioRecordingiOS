@@ -1,14 +1,15 @@
 //
-//  SampleListViewController.h
+//  EditorViewController.h
 //  AudioRecording
 //
-//  Created by LaboratoriOS Cronian Academy on 19/03/14.
+//  Created by LaboratoriOS Cronian Academy on 02/04/14.
 //  Copyright (c) 2014 LaboratoriOS Cronian Academy. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "RRCheckBox.h"
 #import <objc/message.h>
 
-@interface SampleListViewController : UIViewController
+@interface EditorViewController : UIViewController
 
 @end
