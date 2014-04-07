@@ -7,39 +7,31 @@
 //
 
 #import "SampleListViewController.h"
-#import "RecordingViewController.h"
+#import "AudioPlayer.h"
 
 @interface SampleListViewController () <UITableViewDataSource,UITableViewDelegate>
-
+@property(strong,nonatomic) AudioPlayer *rec;
 @end
+
+NSArray *sampleNamesArray;
 
 @implementation SampleListViewController
 
-//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self) {
-//        // Custom initialization
-//    }
-//    return self;
-//}
-
-- (void)viewDidLoad
+- (void)viewDidDisappear:(BOOL)animated
 {
-    
-    UISwipeGestureRecognizer *swipeLeftToRecording = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
-    swipeLeftToRecording.numberOfTouchesRequired = 1;
-    swipeLeftToRecording.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeftToRecording];
-    
-    [super viewDidLoad];
-    NSLog(@"Second view");
-	// Do any additional setup after loading the view.
-    
-    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
-    
+
+}
+
+- (BOOL)prefersStatusBarHidden {return YES;}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationPortrait);
     NSString *sampleString = [self getSamplesNameContent];
     sampleNamesArray = [sampleString componentsSeparatedByString:@"\n"];
+    
+    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
     
     //setez ca tinta pentru datasource si delegate viewcontroller-url
     
@@ -48,23 +40,22 @@
     
     [self.view addSubview:myTableView];
 }
-
-- (void) swipeLeft
+- (void)viewDidLoad
 {
-    NSLog(@"Left swipe");
-    
-    CATransition *animation = [CATransition animation];
-    [animation setDelegate:self];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromLeft];
-    [animation setDuration:0.40];
-    [animation setTimingFunction:
-     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.layer addAnimation:animation forKey:kCATransition];
-    
-    
-    RecordingViewController * recordingView = [[RecordingViewController alloc] init];
-    [self presentViewController:recordingView animated:YES completion:NULL];
+    [super viewDidLoad];
+    _rec = [[AudioPlayer alloc] init];
+    self.title = @"Samples";
+    NSLog(@"Second view");
+	// Do any additional setup after loading the view.
+//    
+//    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
+//
+//    //setez ca tinta pentru datasource si delegate viewcontroller-url
+//    
+//    myTableView.dataSource = self;
+//    myTableView.delegate = self;
+//    
+//    [self.view addSubview:myTableView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,7 +78,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return 100.0;
+	return 70;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,13 +86,13 @@
     static NSString* cellIdentifier = @"Cell";
     
     UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    cell.backgroundColor = [UIColor orangeColor];
-    UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 60, 60)];
-    [playButton setTitle:@"Play" forState:normal];
-    playButton.backgroundColor = [UIColor greenColor];
+    UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 48, 48)];
+    [playButton setBackgroundImage:[UIImage imageNamed:@"button_play_green.png"] forState:UIControlStateNormal];
+    cell.layer.borderWidth = 0.6f;
+    cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
     playButton.layer.borderColor = [[UIColor blackColor] CGColor];
-    playButton.layer.borderWidth = 4;
-    playButton.layer.cornerRadius = 30;
+    playButton.layer.borderWidth = 3.5f;
+    playButton.layer.cornerRadius = 24;
 
     [[cell contentView] addSubview:playButton];
     
@@ -113,22 +104,20 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)viewWillDisappear:(BOOL)animated
 {
-    RecordingViewController * recordingView = [[RecordingViewController alloc] init];
-    NSString *testString = sampleNamesArray[indexPath.row];
-    [recordingView playRecording:testString];
+    [super viewWillDisappear:animated]; // Or pause
+    [_rec stopPlaying];
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return @"Sample list";
+    [_rec startPlaying:sampleNamesArray[indexPath.row] numberOfLoops:4 volumeLevel:1.0f];
 }
 
 - (NSString*) getSamplesNameContent{
     
     NSLog(@"DisplayContent");
-    
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
     NSString *sampleNameFile = [docPath stringByAppendingString:@"/samples.csv"];
     if([[NSFileManager defaultManager] fileExistsAtPath:sampleNameFile])
@@ -136,9 +125,6 @@
         NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:sampleNameFile];
         NSString *sampleList = [[NSString alloc] initWithData:[fileHandle availableData] encoding:NSUTF8StringEncoding];
         [fileHandle closeFile];
-        
-//        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Alerta" message:sampleList delegate:self cancelButtonTitle:@"Stop" otherButtonTitles:nil];
-//        [alert show];
         return sampleList;
     }
     return @"";

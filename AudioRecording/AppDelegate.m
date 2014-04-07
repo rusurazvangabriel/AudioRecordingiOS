@@ -12,13 +12,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-//    // Override point for customization after application launch.
-//    self.window.backgroundColor = [UIColor whiteColor];
-//    [self.window makeKeyAndVisible];
+    [self customizeAppearance];
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+    
+    [application setStatusBarHidden:YES];
+    
     return YES;
 }
 
+- (void)customizeAppearance
+{
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor colorWithRed:0/255.0f green:140/255.0f blue:255/255.0f alpha:1.0f]];
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -45,6 +52,11 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)application:(UIApplication *)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame
+{
+    [application setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 
 @end

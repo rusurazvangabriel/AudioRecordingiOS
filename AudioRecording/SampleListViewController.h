@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <objc/message.h>
 
 @interface SampleListViewController : UIViewController
-{
-    NSArray *sampleNamesArray;
-}
+
 @end
