@@ -13,7 +13,7 @@
 
 @property(strong,nonatomic) RRButton *signInButton;
 @property(strong,nonatomic) RRButton *signUpButton;
-@property(strong,nonatomic) ViewController *mainView;
+@property(strong,nonatomic) MainViewController *mainView;
 @property(strong,nonatomic) RRTextField *usernameTextField;
 @property(strong,nonatomic) RRTextField *passwordTextField;
 @property(strong,nonatomic) UILabel *signUpLabel;
@@ -38,7 +38,7 @@
     [super viewDidLoad];
     self.frameUp = NO;
 	
-    _mainView = [[ViewController alloc] init];
+    _mainView = [[MainViewController alloc] init];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
     
     float X_Co = (self.view.frame.size.width - 240)/2;

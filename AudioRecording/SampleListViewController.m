@@ -31,7 +31,7 @@ NSArray *sampleNamesArray;
     NSString *sampleString = [self getSamplesNameContent];
     sampleNamesArray = [sampleString componentsSeparatedByString:@"\n"];
     
-    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
+    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
     
     //setez ca tinta pentru datasource si delegate viewcontroller-url
     
@@ -47,15 +47,15 @@ NSArray *sampleNamesArray;
     self.title = @"Samples";
     NSLog(@"Second view");
 	// Do any additional setup after loading the view.
-    
-    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
-
-    //setez ca tinta pentru datasource si delegate viewcontroller-url
-    
-    myTableView.dataSource = self;
-    myTableView.delegate = self;
-    
-    [self.view addSubview:myTableView];
+//    
+//    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
+//
+//    //setez ca tinta pentru datasource si delegate viewcontroller-url
+//    
+//    myTableView.dataSource = self;
+//    myTableView.delegate = self;
+//    
+//    [self.view addSubview:myTableView];
 }
 
 - (void)didReceiveMemoryWarning

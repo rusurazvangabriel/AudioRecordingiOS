@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "RRCheckBox.h"
 #import <objc/message.h>
-
+#import "RRSample.h"
 @interface EditorViewController : UIViewController
 
 @end

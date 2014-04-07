@@ -28,6 +28,8 @@
 
 @property(strong,nonatomic) AVAudioPlayer *audioPlayer;
 
+-(float)getSampleLengthForSamplename:(NSString*)sampleName;
+
 -(void) startPlaying:(NSString *)sampleName numberOfLoops:(NSInteger)loopsNumber volumeLevel:(float)volume;
 -(void) stopPlaying;
 

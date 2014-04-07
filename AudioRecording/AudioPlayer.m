@@ -32,7 +32,7 @@
 
 -(void) startPlaying:(NSString *)sampleName numberOfLoops:(NSInteger)loopsNumber volumeLevel:(float)volume
 {
-    NSLog(@"playRecording");
+    NSLog(@"playRecording %@",sampleName);
     
     // Init audio with playback capability
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -190,4 +190,17 @@
     [operation start];
 }
 
+-(float)getSampleLengthForSamplename:(NSString*)sampleName
+{
+    NSLog(@"playRecording %@",sampleName);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = paths[0];
+    NSString * samplePath = [NSString stringWithFormat:@"%@/%@",basePath,sampleName];
+    NSURL *url = [NSURL fileURLWithPath:samplePath];
+
+    AVURLAsset* audioAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    CMTime audioDuration = audioAsset.duration;
+    float audioDurationSeconds = CMTimeGetSeconds(audioDuration);
+    return audioDurationSeconds;
+}
 @end

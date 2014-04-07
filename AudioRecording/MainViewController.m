@@ -6,21 +6,23 @@
 //  Copyright (c) 2014 LaboratoriOS Cronian Academy. All rights reserved.
 //
 
+#import "ViewController.h"
 #import "MainViewController.h"
 #import "RecordingViewController.h"
 #import "SampleListViewController.h"
 #import "EditorViewController.h"
 
-@interface ViewController ()
+@interface MainViewController ()
 
 @property (strong, nonatomic)  RRButton *recordViewButton;
 @property (strong, nonatomic)  RRButton *sampleListButton;
 @property (strong, nonatomic) RRButton *editorViewButton;
 @property (strong, nonatomic) EditorViewController *editor;
 @property (strong, nonatomic) SampleListViewController *sampleList;
+@property (strong, nonatomic) ViewController *test;
 @end
 
-@implementation ViewController
+@implementation MainViewController
 
 - (void)viewDidLoad
 {
@@ -30,6 +32,7 @@
     
     _editor = [[EditorViewController alloc] init];
     _sampleList = [[SampleListViewController alloc]init];
+    _test = [[ViewController alloc]init];
     
     float X_Image = (self.view.frame.size.width - 148)/2;
     UIImageView *logo = [[UIImageView alloc] initWithFrame:CGRectMake(X_Image, 60, 140, 140)];
@@ -74,6 +77,7 @@
 {
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController pushViewController:_sampleList animated:YES];
+//     /[self.navigationController pushViewController:_test animated:YES];
 }
 
 - (void) goToEditorView

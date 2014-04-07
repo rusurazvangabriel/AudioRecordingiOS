@@ -11,8 +11,6 @@
 		8C03E4DE18EEBFF900117D48 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C03E4DD18EEBFF900117D48 /* play.png */; };
 		8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */; };
 		8C0A8FDB18E2D0F700C7C815 /* bgImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDA18E2D0F700C7C815 /* bgImage.jpg */; };
-		8C0A8FDD18E2D72D00C7C815 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */; };
-		8C0A8FDF18E2D73900C7C815 /* RecordNormalImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */; };
 		8C0A8FE318E2EBEE00C7C815 /* navbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE218E2EBEE00C7C815 /* navbar.png */; };
 		8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */; };
 		8C0A8FE918E2FB8400C7C815 /* Play-Pressed-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */; };
@@ -21,6 +19,12 @@
 		8C0C3D0D18E9ADA7006C0748 /* button_play_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0C3D0C18E9ADA7006C0748 /* button_play_green.png */; };
 		8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */; };
 		8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */; };
+		8C21825518F28A5400A108F4 /* RRTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825418F28A5400A108F4 /* RRTrack.m */; };
+		8C21825818F28BEA00A108F4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825718F28BEA00A108F4 /* ViewController.m */; };
+		8C21825B18F29CC200A108F4 /* EventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825A18F29CC200A108F4 /* EventObject.m */; };
+		8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825C18F2B93000A108F4 /* RecordPressedImage.png */; };
+		8C21825F18F2B93000A108F4 /* RecordNormalImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825D18F2B93000A108F4 /* RecordNormalImage.png */; };
+		8C21826518F2EF8C00A108F4 /* RRSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21826418F2EF8C00A108F4 /* RRSample.m */; };
 		8CDE7BAD18D0C21C0082FE17 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BAC18D0C21C0082FE17 /* Foundation.framework */; };
 		8CDE7BAF18D0C21C0082FE17 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BAE18D0C21C0082FE17 /* CoreGraphics.framework */; };
 		8CDE7BB118D0C21C0082FE17 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BB018D0C21C0082FE17 /* UIKit.framework */; };
@@ -84,8 +88,6 @@
 		8C0A8FD718E2CC1200C7C815 /* RecordingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordingViewController.h; sourceTree = "<group>"; };
 		8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordingViewController.m; sourceTree = "<group>"; };
 		8C0A8FDA18E2D0F700C7C815 /* bgImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bgImage.jpg; sourceTree = "<group>"; };
-		8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordPressedImage.png; sourceTree = "<group>"; };
-		8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordNormalImage.png; sourceTree = "<group>"; };
 		8C0A8FE218E2EBEE00C7C815 /* navbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navbar.png; sourceTree = "<group>"; };
 		8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Stop-Normal-Red-icon.png"; sourceTree = "<group>"; };
 		8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Play-Pressed-icon.png"; sourceTree = "<group>"; };
@@ -96,6 +98,16 @@
 		8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleListViewController.m; sourceTree = "<group>"; };
 		8C0F5CFD18D9A86F007A6599 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		8C21825318F28A5400A108F4 /* RRTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RRTrack.h; path = ../RRTrack.h; sourceTree = "<group>"; };
+		8C21825418F28A5400A108F4 /* RRTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RRTrack.m; path = ../RRTrack.m; sourceTree = "<group>"; };
+		8C21825618F28BEA00A108F4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
+		8C21825718F28BEA00A108F4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
+		8C21825918F29CC200A108F4 /* EventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventObject.h; sourceTree = "<group>"; };
+		8C21825A18F29CC200A108F4 /* EventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventObject.m; sourceTree = "<group>"; };
+		8C21825C18F2B93000A108F4 /* RecordPressedImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordPressedImage.png; sourceTree = "<group>"; };
+		8C21825D18F2B93000A108F4 /* RecordNormalImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordNormalImage.png; sourceTree = "<group>"; };
+		8C21826318F2EF8C00A108F4 /* RRSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSample.h; sourceTree = "<group>"; };
+		8C21826418F2EF8C00A108F4 /* RRSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSample.m; sourceTree = "<group>"; };
 		8CDE7BA918D0C21C0082FE17 /* AudioRecording.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioRecording.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CDE7BAC18D0C21C0082FE17 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8CDE7BAE18D0C21C0082FE17 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -217,6 +229,15 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		8C21825218F28A3C00A108F4 /* Track */ = {
+			isa = PBXGroup;
+			children = (
+				8C21825318F28A5400A108F4 /* RRTrack.h */,
+				8C21825418F28A5400A108F4 /* RRTrack.m */,
+			);
+			name = Track;
+			sourceTree = "<group>";
+		};
 		8CDE7BA018D0C21C0082FE17 = {
 			isa = PBXGroup;
 			children = (
@@ -251,6 +272,10 @@
 		8CDE7BB218D0C21C0082FE17 /* AudioRecording */ = {
 			isa = PBXGroup;
 			children = (
+				8C21825918F29CC200A108F4 /* EventObject.h */,
+				8C21825A18F29CC200A108F4 /* EventObject.m */,
+				8C21825618F28BEA00A108F4 /* ViewController.h */,
+				8C21825718F28BEA00A108F4 /* ViewController.m */,
 				8CF6FFC118EC4D790099CF95 /* AudioPlayer */,
 				8CE71EAE18E58AD500E40CBD /* AFNetworking */,
 				8CE71EC218E58AD500E40CBD /* UIKit+AFNetworking */,
@@ -359,6 +384,8 @@
 			children = (
 				8CF6FFBE18EC17490099CF95 /* AudioPlayer.h */,
 				8CF6FFBF18EC17490099CF95 /* AudioPlayer.m */,
+				8C21826318F2EF8C00A108F4 /* RRSample.h */,
+				8C21826418F2EF8C00A108F4 /* RRSample.m */,
 			);
 			name = AudioPlayer;
 			sourceTree = "<group>";
@@ -376,13 +403,13 @@
 		8CF6FFC618EC61A00099CF95 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				8C21825C18F2B93000A108F4 /* RecordPressedImage.png */,
+				8C21825D18F2B93000A108F4 /* RecordNormalImage.png */,
 				8C03E4DD18EEBFF900117D48 /* play.png */,
 				8CF6FFC718EC61EC0099CF95 /* checkedCheckbox.png */,
 				8CF6FFC818EC61EC0099CF95 /* uncheckedCheckbox.png */,
 				8C0A8FE618E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png */,
 				8C0A8FE718E2FB8400C7C815 /* Play-Disabled-icon.png */,
-				8C0A8FDE18E2D73900C7C815 /* RecordNormalImage.png */,
-				8C0A8FDC18E2D72D00C7C815 /* RecordPressedImage.png */,
 				8C0A8FE418E2FB8400C7C815 /* Stop-Normal-Red-icon.png */,
 				8C0A8FE518E2FB8400C7C815 /* Play-Pressed-icon.png */,
 				8C0C3D0C18E9ADA7006C0748 /* button_play_green.png */,
@@ -404,6 +431,7 @@
 		8CF6FFD218EC72B80099CF95 /* CustomInterfaceItems */ = {
 			isa = PBXGroup;
 			children = (
+				8C21825218F28A3C00A108F4 /* Track */,
 				8C03E4D918EEAFED00117D48 /* CustomTableViewCell */,
 				8CF6FFD318EC72C80099CF95 /* CustomTextBoxes */,
 				8CF6FFCE18EC6EEC0099CF95 /* CustomButtons */,
@@ -500,11 +528,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C0A8FE918E2FB8400C7C815 /* Play-Pressed-icon.png in Resources */,
+				8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */,
 				8CF6FFCA18EC61EC0099CF95 /* uncheckedCheckbox.png in Resources */,
 				8C0C3D0D18E9ADA7006C0748 /* button_play_green.png in Resources */,
 				8CDE7BC518D0C21C0082FE17 /* Images.xcassets in Resources */,
+				8C21825F18F2B93000A108F4 /* RecordNormalImage.png in Resources */,
 				8CF0E41418E994C70070EDC0 /* orangePaper.jpg in Resources */,
-				8C0A8FDD18E2D72D00C7C815 /* RecordPressedImage.png in Resources */,
 				8CDE7BB718D0C21C0082FE17 /* InfoPlist.strings in Resources */,
 				8CF6FFC918EC61EC0099CF95 /* checkedCheckbox.png in Resources */,
 				8CF0E40E18E97D030070EDC0 /* background1.jpg in Resources */,
@@ -518,7 +547,6 @@
 				8CDE7BC018D0C21C0082FE17 /* Main.storyboard in Resources */,
 				8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */,
 				8C0A8FEA18E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png in Resources */,
-				8C0A8FDF18E2D73900C7C815 /* RecordNormalImage.png in Resources */,
 				8C0A8FE318E2EBEE00C7C815 /* navbar.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -539,6 +567,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CE71EDA18E58AD500E40CBD /* AFURLSessionManager.m in Sources */,
+				8C21825B18F29CC200A108F4 /* EventObject.m in Sources */,
 				8CF6FFD618EC72E30099CF95 /* RRTextField.m in Sources */,
 				8CF6FFD118EC70100099CF95 /* RRCheckBox.m in Sources */,
 				8CF0E40A18E9735C0070EDC0 /* LoginViewController.m in Sources */,
@@ -548,6 +577,7 @@
 				8CE71EDB18E58AD500E40CBD /* AFNetworkActivityIndicatorManager.m in Sources */,
 				8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */,
 				8C03E4DC18EEB01700117D48 /* RRTableViewCell.m in Sources */,
+				8C21826518F2EF8C00A108F4 /* RRSample.m in Sources */,
 				8CF6FFC018EC17490099CF95 /* AudioPlayer.m in Sources */,
 				8CE71ED718E58AD500E40CBD /* AFURLConnectionOperation.m in Sources */,
 				8CE71EE018E58AD500E40CBD /* UIProgressView+AFNetworking.m in Sources */,
@@ -555,12 +585,14 @@
 				8CE71ED818E58AD500E40CBD /* AFURLRequestSerialization.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
+				8C21825518F28A5400A108F4 /* RRTrack.m in Sources */,
 				8CE71EDF18E58AD500E40CBD /* UIImageView+AFNetworking.m in Sources */,
 				8CDE7BB918D0C21C0082FE17 /* main.m in Sources */,
 				8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */,
 				8CE71EDD18E58AD500E40CBD /* UIAlertView+AFNetworking.m in Sources */,
 				8CF6FFC418EC4DA80099CF95 /* EditorViewController.m in Sources */,
 				8CE71EE118E58AD500E40CBD /* UIWebView+AFNetworking.m in Sources */,
+				8C21825818F28BEA00A108F4 /* ViewController.m in Sources */,
 				8CE71EDC18E58AD500E40CBD /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				8CE71ED318E58AD500E40CBD /* AFHTTPRequestOperationManager.m in Sources */,
 				8CE71ED618E58AD500E40CBD /* AFSecurityPolicy.m in Sources */,

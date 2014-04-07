@@ -60,18 +60,18 @@ static int sampleIndex;
     
     float X_Co = (self.view.frame.size.width - 240)/2;
     
-    _recordingStatusLabel = [[UITextView alloc] initWithFrame:CGRectMake(X_Co, 130, 240, 80)];
+    _recordingStatusLabel = [[UITextView alloc] initWithFrame:CGRectMake(X_Co, 110, 240, 80)];
     _recordingStatusLabel.text = @"Press The Button to record";
     _recordingStatusLabel.textAlignment = NSTextAlignmentCenter;
     _recordingStatusLabel.backgroundColor = [UIColor clearColor];
-    [_recordingStatusLabel setTextColor:[UIColor darkGrayColor]];
+    [_recordingStatusLabel setTextColor:[UIColor blackColor]];
+	_recordingStatusLabel.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:_recordingStatusLabel];
     
-    _recordButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+    _recordButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150 , 160)];
     _recordButton.center = self.view.center;
     [_recordButton setTitle:@"Record" forState:normal];
     [_recordButton setImage:[UIImage imageNamed:@"RecordNormalImage.png"] forState:UIControlStateNormal];
-    [_recordButton setImage:[UIImage imageNamed:@"RecordPressedImage.png"] forState:UIControlStateSelected];
     [self.view addSubview:_recordButton];
     [_recordButton addTarget:self action:@selector(recordButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     _recordButton.hidden = NO;
@@ -90,7 +90,7 @@ static int sampleIndex;
     _fileNameTextField.text = @"";
     _fileNameTextField.delegate = self;
     _fileNameTextField.returnKeyType = UIReturnKeyDone;
-    [self.view addSubview:_fileNameTextField];
+    // [self.view addSubview:_fileNameTextField];
     _fileNameTextField.hidden = YES;
     
     _saveButton = [[UIButton alloc] initWithFrame:CGRectMake(X_Co, self.view.frame.size.height - 140, 240, 35)];
@@ -135,7 +135,8 @@ static int sampleIndex;
 - (void) recordAgainButtonPressed
 {
     self.title = @"Record";
-    _recordingStatusLabel.text = @"Press THE BUTTON to record";
+    [_player stopPlaying];
+    [_recordingStatusLabel setText:@"Press THE BUTTON to record"];
     _recordButton.hidden = NO;
     _playButton.hidden = YES;
     _saveButton.hidden = YES;
@@ -148,11 +149,14 @@ static int sampleIndex;
     if(self.flag == NO)
     {
         self.title = @"Record";
+        [_recordButton setImage:[UIImage imageNamed:@"RecordPressedImage.png"] forState:UIControlStateNormal];
+        [_recordingStatusLabel setText:@"Press again to stop recording"];
         [_player startRecording];
         self.flag = YES;
     }
     else
     {
+        
         self.title = @"Play";
         _fileNameTextField.text = @"";
         _recordingStatusLabel.text = @"Play sample";
@@ -162,44 +166,58 @@ static int sampleIndex;
         _saveButton.hidden = NO;
         _restartRecording.hidden = NO;
         _recordButton.hidden = YES;
+        [_recordButton setImage:[UIImage imageNamed:@"RecordNormalImage.png"] forState:UIControlStateNormal];
         self.flag = NO;
     }
 }
 
 -(void) buttonPlay
 {
-    [_player startPlaying:@"tempSample.caf" numberOfLoops:0 volumeLevel:1.0f];
+    [_player startPlaying:@"tempSample.caf" numberOfLoops:1 volumeLevel:1.0f];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Button Index =%ld",buttonIndex);
+    if (buttonIndex == 1) {  //SaveLogin
+        UITextField *sampleName = [alertView textFieldAtIndex:0];
+        
+        if(![sampleName.text isEqualToString: @""])
+        {
+            NSLog(@"SaveFile");
+            
+            NSString *tempSampleName = [NSString stringWithFormat:@"%@.caf",sampleName.text];
+            NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
+            NSString *sampleNamesFile = [docPath stringByAppendingPathComponent:@"samples.csv"];
+            NSString *newLine = @"\n";
+            
+            NSError * err = NULL;
+            NSFileManager * fm = [[NSFileManager alloc] init];
+            
+            BOOL result = [fm moveItemAtPath:[docPath stringByAppendingPathComponent:@"tempSample.caf"] toPath:[docPath stringByAppendingPathComponent:tempSampleName] error:&err];
+            if(!result)
+                NSLog(@"Error: %@", err);
+            
+            if(![[NSFileManager defaultManager]fileExistsAtPath:sampleNamesFile])
+            {
+                [[NSFileManager defaultManager] createFileAtPath:sampleNamesFile contents:nil attributes:nil];
+            }
+            NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:sampleNamesFile];
+            [fileHandle seekToEndOfFile];
+            [fileHandle writeData:[tempSampleName dataUsingEncoding:NSUTF8StringEncoding]];
+            [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
+            [fileHandle closeFile];
+            [self.navigationController pushViewController:_sampleList animated:YES];
+        }
+    }
 }
 
 - (void)saveSample
 {
-    if(![_fileNameTextField.text isEqualToString: @""])
-    {
-        NSLog(@"SaveFile");
-        
-        NSString *tempSampleName = [NSString stringWithFormat:@"%@.caf",_fileNameTextField.text];
-        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-        NSString *sampleNamesFile = [docPath stringByAppendingPathComponent:@"samples.csv"];
-        NSString *newLine = @"\n";
-        
-        NSError * err = NULL;
-        NSFileManager * fm = [[NSFileManager alloc] init];
-        
-        BOOL result = [fm moveItemAtPath:[docPath stringByAppendingPathComponent:@"tempSample.caf"] toPath:[docPath stringByAppendingPathComponent:tempSampleName] error:&err];
-        if(!result)
-            NSLog(@"Error: %@", err);
-        
-        if(![[NSFileManager defaultManager]fileExistsAtPath:sampleNamesFile])
-        {
-            [[NSFileManager defaultManager] createFileAtPath:sampleNamesFile contents:nil attributes:nil];
-        }
-        NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:sampleNamesFile];
-        [fileHandle seekToEndOfFile];
-        [fileHandle writeData:[tempSampleName dataUsingEncoding:NSUTF8StringEncoding]];
-        [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
-        [fileHandle closeFile];
-        [self.navigationController pushViewController:_sampleList animated:YES];
-    }
+    UIAlertView * alert =[[UIAlertView alloc ] initWithTitle:@"Save sample" message:@"Enter sample name" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert addButtonWithTitle:@"Done"];
+    [alert show];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
