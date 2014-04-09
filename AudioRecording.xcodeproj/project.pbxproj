@@ -19,7 +19,6 @@
 		8C0C3D0D18E9ADA7006C0748 /* button_play_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0C3D0C18E9ADA7006C0748 /* button_play_green.png */; };
 		8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */; };
 		8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */; };
-		8C21825518F28A5400A108F4 /* RRTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825418F28A5400A108F4 /* RRTrack.m */; };
 		8C21825818F28BEA00A108F4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825718F28BEA00A108F4 /* ViewController.m */; };
 		8C21825B18F29CC200A108F4 /* EventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825A18F29CC200A108F4 /* EventObject.m */; };
 		8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825C18F2B93000A108F4 /* RecordPressedImage.png */; };
@@ -98,8 +97,6 @@
 		8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleListViewController.m; sourceTree = "<group>"; };
 		8C0F5CFD18D9A86F007A6599 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8C21825318F28A5400A108F4 /* RRTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RRTrack.h; path = ../RRTrack.h; sourceTree = "<group>"; };
-		8C21825418F28A5400A108F4 /* RRTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RRTrack.m; path = ../RRTrack.m; sourceTree = "<group>"; };
 		8C21825618F28BEA00A108F4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
 		8C21825718F28BEA00A108F4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
 		8C21825918F29CC200A108F4 /* EventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventObject.h; sourceTree = "<group>"; };
@@ -227,15 +224,6 @@
 				8C0A8FE218E2EBEE00C7C815 /* navbar.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		8C21825218F28A3C00A108F4 /* Track */ = {
-			isa = PBXGroup;
-			children = (
-				8C21825318F28A5400A108F4 /* RRTrack.h */,
-				8C21825418F28A5400A108F4 /* RRTrack.m */,
-			);
-			name = Track;
 			sourceTree = "<group>";
 		};
 		8CDE7BA018D0C21C0082FE17 = {
@@ -431,7 +419,6 @@
 		8CF6FFD218EC72B80099CF95 /* CustomInterfaceItems */ = {
 			isa = PBXGroup;
 			children = (
-				8C21825218F28A3C00A108F4 /* Track */,
 				8C03E4D918EEAFED00117D48 /* CustomTableViewCell */,
 				8CF6FFD318EC72C80099CF95 /* CustomTextBoxes */,
 				8CF6FFCE18EC6EEC0099CF95 /* CustomButtons */,
@@ -585,7 +572,6 @@
 				8CE71ED818E58AD500E40CBD /* AFURLRequestSerialization.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
-				8C21825518F28A5400A108F4 /* RRTrack.m in Sources */,
 				8CE71EDF18E58AD500E40CBD /* UIImageView+AFNetworking.m in Sources */,
 				8CDE7BB918D0C21C0082FE17 /* main.m in Sources */,
 				8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */,
