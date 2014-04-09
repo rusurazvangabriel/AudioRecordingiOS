@@ -53,7 +53,6 @@
 
 
 
-
 @end
 
 @implementation EditorViewController
@@ -160,21 +159,52 @@
 
 -(void)initTestButtons
 {
-    _triggerButton = [[RRSample alloc] initWithSampleName:@"bass.wav"];
-    [_triggerButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [_triggerButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [self.view addSubview:_triggerButton];
-    
-    _triggerButton2 = [[RRSample alloc ]initWithSampleName:@"drums.wav"];
-    [_triggerButton2 addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [_triggerButton2 addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [self.view addSubview:_triggerButton2];
-    
     _eventList = [[NSMutableArray alloc] init];
     
-    [_eventList insertObject:_triggerButton atIndex:[_eventList count]];
-    [_eventList insertObject:_triggerButton2 atIndex:[_eventList count]];
 }
+
+
+-(void) dragEnded:(id) sender
+{
+    NSLog(@"drag ended");
+    RRSample* currentSample = (RRSample*) sender;
+    int closestSampleCoordonate = [self getClosestSampleCoordonate:currentSample];
+    if (closestSampleCoordonate != 999) {
+        CGRect frame = currentSample.frame;
+        frame.origin.x = closestSampleCoordonate; // o sa fie rezolvata si asta
+        currentSample.frame = frame;
+    } else {
+        NSLog(@"nu a mers, lol");
+    }
+}
+
+-(int) getClosestSampleCoordonate:(RRSample*) currentSample
+{
+    int vecinity = 20;
+    int minDistance = 999;
+    UIButton* buttonToSnapTo;
+    for (UIButton *button in _eventList)
+    {
+        if (button != currentSample){
+            int distance = currentSample.frame.origin.x - (button.frame.origin.x + button.frame.size.width);
+            {
+                if(abs(distance) < vecinity && distance < minDistance)
+                {
+                    minDistance = distance;
+                    buttonToSnapTo = button;
+                }
+            }
+        }
+    }
+    if (buttonToSnapTo != NULL) {
+        NSLog(@"buttonToSnapTo has x coordonate @%f", buttonToSnapTo.frame.origin.x);
+        return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
+    } else {
+        NSLog(@"null button");
+        return 999;
+    }
+}
+
 
 -(void)functionTest
 {
@@ -226,7 +256,6 @@
 {
     RRSample *aux = (RRSample *)sender;
     aux.triggered = NO;
-    NSLog(@"moved");
     UIControl *control = sender;
     UITouch *t = [[event allTouches] anyObject];
     CGPoint pPrev = [t previousLocationInView:control];
@@ -287,6 +316,7 @@
     RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav"];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:auxButton];
     [_eventList insertObject:auxButton atIndex:[_eventList count]];
 }
