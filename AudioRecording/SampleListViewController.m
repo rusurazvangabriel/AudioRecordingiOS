@@ -8,12 +8,15 @@
 
 #import "SampleListViewController.h"
 #import "AudioPlayer.h"
-
+#import "RRSampleListPlayButton.h"
+#import "RRSampleListDeleteButton.h"
 @interface SampleListViewController () <UITableViewDataSource,UITableViewDelegate>
 @property(strong,nonatomic) AudioPlayer *rec;
+@property(strong,nonatomic) NSMutableArray *sampleNamesArray;
+@property(strong, nonatomic) UITableView *myTableView;
 @end
 
-NSArray *sampleNamesArray;
+
 
 @implementation SampleListViewController
 
@@ -28,17 +31,16 @@ NSArray *sampleNamesArray;
 {
     [super viewWillAppear:animated];
     objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationPortrait);
-    NSString *sampleString = [self getSamplesNameContent];
-    sampleNamesArray = [sampleString componentsSeparatedByString:@"\n"];
     
-    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
-    
+    _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
+    _myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
     //setez ca tinta pentru datasource si delegate viewcontroller-url
     
-    myTableView.dataSource = self;
-    myTableView.delegate = self;
+    _myTableView.separatorColor = [UIColor clearColor];
+    _myTableView.dataSource = self;
+    _myTableView.delegate = self;
     
-    [self.view addSubview:myTableView];
+    [self.view addSubview:_myTableView];
 }
 - (void)viewDidLoad
 {
@@ -46,16 +48,6 @@ NSArray *sampleNamesArray;
     _rec = [[AudioPlayer alloc] init];
     self.title = @"Samples";
     NSLog(@"Second view");
-	// Do any additional setup after loading the view.
-//    
-//    UITableView* myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 20) style:UITableViewStylePlain];
-//
-//    //setez ca tinta pentru datasource si delegate viewcontroller-url
-//    
-//    myTableView.dataSource = self;
-//    myTableView.delegate = self;
-//    
-//    [self.view addSubview:myTableView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,7 +59,7 @@ NSArray *sampleNamesArray;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //returns number of rows
-    return [sampleNamesArray count] - 1;
+    return [_sampleNamesArray count] - 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -78,7 +70,7 @@ NSArray *sampleNamesArray;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return 70;
+	return 50;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,21 +78,21 @@ NSArray *sampleNamesArray;
     static NSString* cellIdentifier = @"Cell";
     
     UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 48, 48)];
-    [playButton setBackgroundImage:[UIImage imageNamed:@"button_play_green.png"] forState:UIControlStateNormal];
-    cell.layer.borderWidth = 0.6f;
-    cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
-    playButton.layer.borderColor = [[UIColor blackColor] CGColor];
-    playButton.layer.borderWidth = 3.5f;
-    playButton.layer.cornerRadius = 24;
-
-    [[cell contentView] addSubview:playButton];
-    
-    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,10,200,60)];
-    cellLabel.text = [sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
+    RRSampleListPlayButton *playButton = [[RRSampleListPlayButton alloc] initWithFrame];
+    playButton.sampleName = _sampleNamesArray[indexPath.row];
+    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,5,200,14)];
+    [cellLabel setFont:[UIFont systemFontOfSize:12.0f]];
+    cellLabel.text = [_sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [_sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
     cellLabel.textColor = [UIColor blackColor];
-    
+    cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    cell.layer.borderWidth = 0.4f;
+    RRSampleListDeleteButton *deleteButton = [[RRSampleListDeleteButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    deleteButton.index = indexPath.row;
+    [deleteButton addTarget:self action:@selector(removeSample:) forControlEvents:UIControlEventTouchUpInside];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [[cell contentView] addSubview:deleteButton];
     [[cell contentView] addSubview:cellLabel];
+    [[cell contentView] addSubview:playButton];
     return cell;
 }
 
@@ -110,24 +102,34 @@ NSArray *sampleNamesArray;
     [_rec stopPlaying];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+
+- (void)removeSample:(id)sender
 {
-    [_rec startPlaying:sampleNamesArray[indexPath.row] numberOfLoops:4 volumeLevel:1.0f];
+    RRSampleListDeleteButton *aux = (RRSampleListDeleteButton *)sender;
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:_sampleNamesArray[aux.index]];
+    NSError *error;
+    BOOL success = [fileManager removeItemAtPath:filePath error:&error];
+    if (success) {
+        UIAlertView *removeSuccessFulAlert=[[UIAlertView alloc]initWithTitle:@"Congratulation:" message:@"Successfully removed" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [removeSuccessFulAlert show];
+        [_sampleNamesArray removeObjectAtIndex:aux.index];
+        [_myTableView reloadData];
+    }
+    else
+    {
+        NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
+    }
 }
 
-- (NSString*) getSamplesNameContent{
-    
-    NSLog(@"DisplayContent");
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-    NSString *sampleNameFile = [docPath stringByAppendingString:@"/samples.csv"];
-    if([[NSFileManager defaultManager] fileExistsAtPath:sampleNameFile])
-    {
-        NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:sampleNameFile];
-        NSString *sampleList = [[NSString alloc] initWithData:[fileHandle availableData] encoding:NSUTF8StringEncoding];
-        [fileHandle closeFile];
-        return sampleList;
-    }
-    return @"";
+-(NSArray *)listFileAtPath
+{
+    //-----> LIST ALL FILES <-----// 
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0] error:NULL];
+    return directoryContent;
 }
 
 @end

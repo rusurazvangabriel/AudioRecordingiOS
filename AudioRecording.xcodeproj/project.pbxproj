@@ -19,12 +19,13 @@
 		8C0C3D0D18E9ADA7006C0748 /* button_play_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C0C3D0C18E9ADA7006C0748 /* button_play_green.png */; };
 		8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */; };
 		8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */; };
-		8C21825518F28A5400A108F4 /* RRTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825418F28A5400A108F4 /* RRTrack.m */; };
-		8C21825818F28BEA00A108F4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825718F28BEA00A108F4 /* ViewController.m */; };
-		8C21825B18F29CC200A108F4 /* EventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21825A18F29CC200A108F4 /* EventObject.m */; };
 		8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825C18F2B93000A108F4 /* RecordPressedImage.png */; };
 		8C21825F18F2B93000A108F4 /* RecordNormalImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825D18F2B93000A108F4 /* RecordNormalImage.png */; };
 		8C21826518F2EF8C00A108F4 /* RRSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21826418F2EF8C00A108F4 /* RRSample.m */; };
+		8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5737F218F58ED300BA8DA7 /* RRSampleListPlayButton.m */; };
+		8C5737F618F5918400BA8DA7 /* RRSampleListDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5737F518F5918400BA8DA7 /* RRSampleListDeleteButton.m */; };
+		8C5737F818F59BBB00BA8DA7 /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C5737F718F59BBB00BA8DA7 /* delete.png */; };
+		8C5737FB18F59CC200BA8DA7 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5737FA18F59CC200BA8DA7 /* SignUpViewController.m */; };
 		8CDE7BAD18D0C21C0082FE17 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BAC18D0C21C0082FE17 /* Foundation.framework */; };
 		8CDE7BAF18D0C21C0082FE17 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BAE18D0C21C0082FE17 /* CoreGraphics.framework */; };
 		8CDE7BB118D0C21C0082FE17 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CDE7BB018D0C21C0082FE17 /* UIKit.framework */; };
@@ -98,16 +99,17 @@
 		8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleListViewController.m; sourceTree = "<group>"; };
 		8C0F5CFD18D9A86F007A6599 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8C0F5CFE18D9A86F007A6599 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		8C21825318F28A5400A108F4 /* RRTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RRTrack.h; path = ../RRTrack.h; sourceTree = "<group>"; };
-		8C21825418F28A5400A108F4 /* RRTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RRTrack.m; path = ../RRTrack.m; sourceTree = "<group>"; };
-		8C21825618F28BEA00A108F4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
-		8C21825718F28BEA00A108F4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
-		8C21825918F29CC200A108F4 /* EventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventObject.h; sourceTree = "<group>"; };
-		8C21825A18F29CC200A108F4 /* EventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventObject.m; sourceTree = "<group>"; };
 		8C21825C18F2B93000A108F4 /* RecordPressedImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordPressedImage.png; sourceTree = "<group>"; };
 		8C21825D18F2B93000A108F4 /* RecordNormalImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordNormalImage.png; sourceTree = "<group>"; };
 		8C21826318F2EF8C00A108F4 /* RRSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSample.h; sourceTree = "<group>"; };
 		8C21826418F2EF8C00A108F4 /* RRSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSample.m; sourceTree = "<group>"; };
+		8C5737F118F58ED300BA8DA7 /* RRSampleListPlayButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSampleListPlayButton.h; sourceTree = "<group>"; };
+		8C5737F218F58ED300BA8DA7 /* RRSampleListPlayButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSampleListPlayButton.m; sourceTree = "<group>"; };
+		8C5737F418F5918400BA8DA7 /* RRSampleListDeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSampleListDeleteButton.h; sourceTree = "<group>"; };
+		8C5737F518F5918400BA8DA7 /* RRSampleListDeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSampleListDeleteButton.m; sourceTree = "<group>"; };
+		8C5737F718F59BBB00BA8DA7 /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		8C5737F918F59CC200BA8DA7 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		8C5737FA18F59CC200BA8DA7 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		8CDE7BA918D0C21C0082FE17 /* AudioRecording.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioRecording.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CDE7BAC18D0C21C0082FE17 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8CDE7BAE18D0C21C0082FE17 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -219,6 +221,7 @@
 		8C0A8FEC18E2FB8F00C7C815 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8C5737F718F59BBB00BA8DA7 /* delete.png */,
 				8CF6FFC618EC61A00099CF95 /* Buttons */,
 				8CF6FFC518EC61800099CF95 /* Backgrounds */,
 				8CF0E41518E998D20070EDC0 /* greenGradient.jpg */,
@@ -232,8 +235,6 @@
 		8C21825218F28A3C00A108F4 /* Track */ = {
 			isa = PBXGroup;
 			children = (
-				8C21825318F28A5400A108F4 /* RRTrack.h */,
-				8C21825418F28A5400A108F4 /* RRTrack.m */,
 			);
 			name = Track;
 			sourceTree = "<group>";
@@ -272,10 +273,6 @@
 		8CDE7BB218D0C21C0082FE17 /* AudioRecording */ = {
 			isa = PBXGroup;
 			children = (
-				8C21825918F29CC200A108F4 /* EventObject.h */,
-				8C21825A18F29CC200A108F4 /* EventObject.m */,
-				8C21825618F28BEA00A108F4 /* ViewController.h */,
-				8C21825718F28BEA00A108F4 /* ViewController.m */,
 				8CF6FFC118EC4D790099CF95 /* AudioPlayer */,
 				8CE71EAE18E58AD500E40CBD /* AFNetworking */,
 				8CE71EC218E58AD500E40CBD /* UIKit+AFNetworking */,
@@ -291,6 +288,8 @@
 				8C0F5CFB18D9A4B0007A6599 /* SampleListViewController.m */,
 				8CF6FFC218EC4DA80099CF95 /* EditorViewController.h */,
 				8CF6FFC318EC4DA80099CF95 /* EditorViewController.m */,
+				8C5737F918F59CC200BA8DA7 /* SignUpViewController.h */,
+				8C5737FA18F59CC200BA8DA7 /* SignUpViewController.m */,
 				8CDE7BBE18D0C21C0082FE17 /* Main.storyboard */,
 				8CDE7BC418D0C21C0082FE17 /* Images.xcassets */,
 				8CDE7BB318D0C21C0082FE17 /* Supporting Files */,
@@ -424,6 +423,10 @@
 				8CF6FFCC18EC6E840099CF95 /* RRButton.m */,
 				8CF6FFCF18EC70100099CF95 /* RRCheckBox.h */,
 				8CF6FFD018EC70100099CF95 /* RRCheckBox.m */,
+				8C5737F118F58ED300BA8DA7 /* RRSampleListPlayButton.h */,
+				8C5737F218F58ED300BA8DA7 /* RRSampleListPlayButton.m */,
+				8C5737F418F5918400BA8DA7 /* RRSampleListDeleteButton.h */,
+				8C5737F518F5918400BA8DA7 /* RRSampleListDeleteButton.m */,
 			);
 			name = CustomButtons;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 				8CF0E41618E998D20070EDC0 /* greenGradient.jpg in Resources */,
 				8CE71EE318E5C8C800E40CBD /* Record.caf in Resources */,
 				8C03E4DE18EEBFF900117D48 /* play.png in Resources */,
+				8C5737F818F59BBB00BA8DA7 /* delete.png in Resources */,
 				8C0A8FEB18E2FB8400C7C815 /* Play-Disabled-icon.png in Resources */,
 				8CDE7BC018D0C21C0082FE17 /* Main.storyboard in Resources */,
 				8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */,
@@ -567,7 +571,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CE71EDA18E58AD500E40CBD /* AFURLSessionManager.m in Sources */,
-				8C21825B18F29CC200A108F4 /* EventObject.m in Sources */,
 				8CF6FFD618EC72E30099CF95 /* RRTextField.m in Sources */,
 				8CF6FFD118EC70100099CF95 /* RRCheckBox.m in Sources */,
 				8CF0E40A18E9735C0070EDC0 /* LoginViewController.m in Sources */,
@@ -585,14 +588,15 @@
 				8CE71ED818E58AD500E40CBD /* AFURLRequestSerialization.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
-				8C21825518F28A5400A108F4 /* RRTrack.m in Sources */,
+				8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */,
 				8CE71EDF18E58AD500E40CBD /* UIImageView+AFNetworking.m in Sources */,
+				8C5737FB18F59CC200BA8DA7 /* SignUpViewController.m in Sources */,
 				8CDE7BB918D0C21C0082FE17 /* main.m in Sources */,
+				8C5737F618F5918400BA8DA7 /* RRSampleListDeleteButton.m in Sources */,
 				8C0F5CFF18D9A86F007A6599 /* AppDelegate.m in Sources */,
 				8CE71EDD18E58AD500E40CBD /* UIAlertView+AFNetworking.m in Sources */,
 				8CF6FFC418EC4DA80099CF95 /* EditorViewController.m in Sources */,
 				8CE71EE118E58AD500E40CBD /* UIWebView+AFNetworking.m in Sources */,
-				8C21825818F28BEA00A108F4 /* ViewController.m in Sources */,
 				8CE71EDC18E58AD500E40CBD /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				8CE71ED318E58AD500E40CBD /* AFHTTPRequestOperationManager.m in Sources */,
 				8CE71ED618E58AD500E40CBD /* AFSecurityPolicy.m in Sources */,

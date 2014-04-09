@@ -8,16 +8,18 @@
 
 #import "LoginViewController.h"
 #import "MainViewController.h"
-
+#import "SignUpViewController.m"
 @interface LoginViewController ()
 
 @property(strong,nonatomic) RRButton *signInButton;
 @property(strong,nonatomic) RRButton *signUpButton;
 @property(strong,nonatomic) MainViewController *mainView;
+@property(strong,nonatomic) SignUpViewController *registerView;
 @property(strong,nonatomic) RRTextField *usernameTextField;
 @property(strong,nonatomic) RRTextField *passwordTextField;
 @property(strong,nonatomic) UILabel *signUpLabel;
 @property(nonatomic,assign, getter = isFrameUp) BOOL frameUp;
+
 @end
 
 @implementation LoginViewController
@@ -136,6 +138,7 @@
 
 - (void) goToSignUpView
 {
+    [self.navigationController pushViewController:_registerView animated:YES]
 }
 
 - (void)login

@@ -188,8 +188,6 @@ static int sampleIndex;
             
             NSString *tempSampleName = [NSString stringWithFormat:@"%@.caf",sampleName.text];
             NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-            NSString *sampleNamesFile = [docPath stringByAppendingPathComponent:@"samples.csv"];
-            NSString *newLine = @"\n";
             
             NSError * err = NULL;
             NSFileManager * fm = [[NSFileManager alloc] init];
@@ -197,16 +195,6 @@ static int sampleIndex;
             BOOL result = [fm moveItemAtPath:[docPath stringByAppendingPathComponent:@"tempSample.caf"] toPath:[docPath stringByAppendingPathComponent:tempSampleName] error:&err];
             if(!result)
                 NSLog(@"Error: %@", err);
-            
-            if(![[NSFileManager defaultManager]fileExistsAtPath:sampleNamesFile])
-            {
-                [[NSFileManager defaultManager] createFileAtPath:sampleNamesFile contents:nil attributes:nil];
-            }
-            NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:sampleNamesFile];
-            [fileHandle seekToEndOfFile];
-            [fileHandle writeData:[tempSampleName dataUsingEncoding:NSUTF8StringEncoding]];
-            [fileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
-            [fileHandle closeFile];
             [self.navigationController pushViewController:_sampleList animated:YES];
         }
     }
