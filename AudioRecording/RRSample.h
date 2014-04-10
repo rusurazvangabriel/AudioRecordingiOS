@@ -13,6 +13,8 @@
 
 @property (strong,nonatomic) NSString *sampleName;
 
+@property (nonatomic,assign) int trackId;
+
 @property (nonatomic,assign) BOOL triggered;
 
 - (id)initWithSampleName:(NSString *)name;

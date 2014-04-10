@@ -8,7 +8,8 @@
 
 #import "LoginViewController.h"
 #import "MainViewController.h"
-#import "SignUpViewController.m"
+#import "SignUpViewController.h"
+
 @interface LoginViewController ()
 
 @property(strong,nonatomic) RRButton *signInButton;
@@ -41,6 +42,8 @@
     self.frameUp = NO;
 	
     _mainView = [[MainViewController alloc] init];
+    _registerView = [[SignUpViewController alloc] init];
+    
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
     
     float X_Co = (self.view.frame.size.width - 240)/2;
@@ -138,12 +141,37 @@
 
 - (void) goToSignUpView
 {
-    [self.navigationController pushViewController:_registerView animated:YES]
+    [self.navigationController pushViewController:_registerView animated:YES];
 }
 
 - (void)login
 {
-    [self.navigationController pushViewController:_mainView animated:YES];
+    // Create your request string with parameter name as defined in PHP file
+    NSString *myRequestString = [NSString stringWithFormat:@"email=%@&password=%@",_usernameTextField.text,_passwordTextField.text];
+    
+    // Create Data from request
+    NSData *myRequestData = [NSData dataWithBytes: [myRequestString UTF8String] length: [myRequestString length]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: [NSURL URLWithString: @"http://app.etajul9.ro/api/login.php"]];
+    // set Request Type
+    [request setHTTPMethod: @"POST"];
+    // Set content-type
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
+    // Set Request Body
+    [request setHTTPBody: myRequestData];
+    // Now send a request and get Response
+    NSData *returnData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    // Log Response
+    NSString *response = [[NSString alloc] initWithBytes:[returnData bytes] length:[returnData length] encoding:NSUTF8StringEncoding];
+    NSLog(@"%@",response);
+    
+    NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *e;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&e];
+    
+    if([[dict objectForKey:@"succes"] isEqualToString:@"Valid"])
+    {
+        [self.navigationController pushViewController:_mainView animated:YES];
+    }
 }
 
 @end

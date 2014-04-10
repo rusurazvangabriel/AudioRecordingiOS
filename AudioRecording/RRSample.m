@@ -12,7 +12,7 @@
 
 - (id)initWithSampleName:(NSString *)name
 {
-    self = [super initWithFrame:CGRectMake(100, 100, [self getSampleLengthForSamplename:name] * 10 - 1, 50)];
+    self = [super initWithFrame:CGRectMake(100, 100, [self getSampleLengthForSamplename:name] * 10 - 1, 40)];
     if (self) {
         self.triggered = NO;
         self.sampleName = name;

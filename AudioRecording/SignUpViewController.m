@@ -7,6 +7,7 @@
 //
 
 #import "SignUpViewController.h"
+#import "LoginViewController.h"
 
 @interface SignUpViewController ()
 
@@ -14,10 +15,19 @@
 
 @implementation SignUpViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
+	 self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
 }
 
 - (void)didReceiveMemoryWarning

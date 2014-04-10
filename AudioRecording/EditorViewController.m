@@ -12,44 +12,20 @@
 
 @interface EditorViewController () //<UITableViewDataSource,UITableViewDelegate>
 
-@property(strong,nonatomic) NSMutableArray* trackArray;
-@property(strong,nonatomic) NSMutableArray* sampleNameArray;
-@property(strong,nonatomic) NSMutableArray* checkboxArray;
-
-@property(strong, nonatomic) RRCheckBox *checkbox1;
-@property(strong, nonatomic) RRCheckBox *checkbox2;
-@property(strong, nonatomic) AudioPlayer *player;
-
+@property(strong,nonatomic) NSMutableArray *trackArray;
+@property(strong,nonatomic) NSMutableArray *sampleNameArray;
+@property(strong,nonatomic) NSMutableArray *checkboxArray;
 
 @property (strong,nonatomic) NSMutableArray *sampleArray;
-
 @property (nonatomic, strong) UIToolbar	*toolbar;
-
-@property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
-
-@property (weak, nonatomic) IBOutlet UIButton *Button;
-
-@property (strong, nonatomic) IBOutlet RRSample *triggerButton;
-
-@property (strong, nonatomic) IBOutlet RRSample *triggerButton2;
-
 @property (weak, nonatomic) UIButton *animationButton;
-
 @property (nonatomic) BOOL start;
-
 @property (nonatomic) BOOL played;
 
 // general control references
-
 @property (nonatomic, assign) int tempoPlaceholder;
-
 // event object references
-
-@property (nonatomic, assign) int nextEventTriggerTime;
-
 @property (strong, nonatomic) NSMutableArray *eventList;
-
-@property (strong, nonatomic) NSMutableArray *playerList; // a channel is
 
 
 
@@ -58,19 +34,12 @@
 
 @implementation EditorViewController
 
-
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
 - (void)createToolbarItems
 {
     UIBarButtonItem *customItem1 = [[UIBarButtonItem alloc] initWithTitle:@""
                                                                     style:UIBarButtonItemStyleBordered
                                                                    target:self
-                                                                   action:@selector(play)];
+                                                                   action:@selector(functionTest)];
     UIImage *baseImage = [UIImage imageNamed:@"play.png"];
     UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
     [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
@@ -90,55 +59,82 @@
     [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     UIBarButtonItem *addTrackItem = [[UIBarButtonItem alloc] initWithTitle:@"AddBass"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(addTrack)];
+                                                                     style:UIBarButtonItemStyleBordered
+                                                                    target:self
+                                                                    action:@selector(addTrack)];
     [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     UIBarButtonItem *addTrackItem1 = [[UIBarButtonItem alloc] initWithTitle:@"AddDrums"
-                                                                     style:UIBarButtonItemStyleBordered
-                                                                    target:self
-                                                                    action:@selector(addTrack1)];
+                                                                      style:UIBarButtonItemStyleBordered
+                                                                     target:self
+                                                                     action:@selector(addTrack1)];
     [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     [self.toolbar setItems:@[customItem1,customItem2,customItem3,addTrackItem,addTrackItem1] animated:NO];
 }
 
+- (void)adjustToolbarSize
+{
+    // size up the toolbar and set its frame
+	[self.toolbar sizeToFit];
+    
+    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
+	CGRect mainViewBounds = self.view.bounds;
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
+                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(mainViewBounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight);
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if ( ! UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft duration:duration];;
+    }else
+        
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeRight duration:duration];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscape;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    _start = NO;
-    _played = NO;
-    
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    
-    _player = [[AudioPlayer alloc]init];
-    [self initElements];
     
     _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
 	self.toolbar.barStyle = UIBarStyleDefault;
-	
 	// size up the toolbar and set its frame
     [self adjustToolbarSize];
-    
 	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
                                       CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
                                       CGRectGetWidth(self.view.bounds),
                                       CGRectGetHeight(self.toolbar.frame))];
-    
     // make so the toolbar stays to the bottom and keep the width matching the device's screen width
     self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self createToolbarItems];
 	[self.view addSubview:self.toolbar];
     
-    _checkbox2 = [[RRCheckBox alloc] initWithCoordinates:CGPointMake(200, 70)];
+    _start = NO;
+    _played = NO;
+    [self initElements];
     
     _trackArray = [[NSMutableArray alloc] init];
     _sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
-    _checkboxArray = [[NSMutableArray alloc] init];
-    
     
     _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     _animationButton.frame = CGRectMake(0, 0, 1, self.view.frame.size.width - 44);
@@ -149,31 +145,58 @@
     [self.view addSubview:_animationButton];
     [self.view bringSubviewToFront:_animationButton];
     
+    [self addChannel];
+    [self addChannel];
+    [self addChannel];
 }
 
 /*----------------------------------------------------------------------------------------------------*/
+
+-(void) dragEnded:(id) sender
+{
+    NSLog(@"drag ended");
+    RRSample* currentSample = (RRSample*) sender;
+    int closestSampleCoordonate = [self getClosestSampleCoordonate:currentSample];
+    if (closestSampleCoordonate != 999) {
+        CGRect frame = currentSample.frame;
+        frame.origin.x = closestSampleCoordonate; // o sa fie rezolvata si asta
+        currentSample.frame = frame;
+    } else {
+        NSLog(@"nu a mers, lol");
+    }
+}
+
+-(int) getClosestSampleCoordonate:(RRSample*) currentSample
+{
+    int vecinity = 20;
+    int minDistance = 999;
+    UIButton* buttonToSnapTo;
+    for (UIButton *button in _eventList)
+    {
+        if (button != currentSample){
+            int distance = currentSample.frame.origin.x - (button.frame.origin.x + button.frame.size.width);
+            {
+                if(abs(distance) < vecinity && distance < minDistance)
+                {
+                    minDistance = distance;
+                    buttonToSnapTo = button;
+                }
+            }
+        }
+    }
+    if (buttonToSnapTo != NULL) {
+        NSLog(@"buttonToSnapTo has x coordonate @%f", buttonToSnapTo.frame.origin.x);
+        return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
+    } else {
+        NSLog(@"null button");
+        return 999;
+    }
+}
+
 -(void)initElements
 {
     _tempoPlaceholder = 3;
-    [self initTestButtons];
-}
-
--(void)initTestButtons
-{
-    _triggerButton = [[RRSample alloc] initWithSampleName:@"bass.wav"];
-    [_triggerButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [_triggerButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [self.view addSubview:_triggerButton];
-    
-    _triggerButton2 = [[RRSample alloc ]initWithSampleName:@"drums.wav"];
-    [_triggerButton2 addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [_triggerButton2 addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [self.view addSubview:_triggerButton2];
-    
     _eventList = [[NSMutableArray alloc] init];
-    
-    [_eventList insertObject:_triggerButton atIndex:[_eventList count]];
-    [_eventList insertObject:_triggerButton2 atIndex:[_eventList count]];
 }
 
 -(void)functionTest
@@ -201,8 +224,8 @@
            && (_animationButton.frame.origin.x >= object.frame.origin.x - 1)
            && (_animationButton.frame.origin.x < object.frame.origin.x + object.frame.size.width))
         {
-            [_player startPlaying:object.sampleName numberOfLoops:1 volumeLevel:0.8];
-            object.triggered = YES;
+                [_trackArray[object.trackId] startPlaying:object.sampleName numberOfLoops:1 volumeLevel:0.8];
+                object.triggered = YES;
         }
         else if(_animationButton.frame.origin.x > object.frame.origin.x + object.frame.size.width)
         {
@@ -217,16 +240,14 @@
                      animations:^{
                          _animationButton.center= CGPointMake(newX, _animationButton.center.y);
                      }
-                     completion:^(BOOL finished){[self animationControl];}];
+                     completion:^(BOOL finished){[self animationControl];
+                     }];
 }
-
-
 
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event
 {
     RRSample *aux = (RRSample *)sender;
     aux.triggered = NO;
-    NSLog(@"moved");
     UIControl *control = sender;
     UITouch *t = [[event allTouches] anyObject];
     CGPoint pPrev = [t previousLocationInView:control];
@@ -237,56 +258,26 @@
     control.center = center;
 }
 
-
-/*----------------------------------------------------------------------------------------------------*/
-
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    //returns number of rows
-//    return 2;
-//}
-//
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    //returns number of samples
-//    return 1;
-//}
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//	return 70;
-//}
-//
-//- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    static NSString* cellIdentifier = @"Cell";
-//
-//    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//    RRCheckBox *playButton = [[RRCheckBox alloc] initWithCoordinates:CGPointMake(10, 10)];
-//    [[cell contentView] addSubview:playButton];
-//    [_checkboxArray addObject:playButton];
-//
-//    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,10,200,60)];
-//    cellLabel.text = [NSString stringWithString:_sampleNameArray[indexPath.row]];
-//    cellLabel.textColor = [UIColor blackColor];
-//    [cell setBackgroundColor:[UIColor clearColor]];
-//    [[cell contentView] addSubview:cellLabel];
-//    return cell;
-//}
-
 -(void)goToMainView
 {
     _start = NO;
-    [_player stopPlaying];
     MainViewController *mv = [[MainViewController alloc] init];
     [self.navigationController pushViewController:mv animated:YES];
+}
+
+-(void)addChannel
+{
+    AudioPlayer *player = [[AudioPlayer alloc] init];
+    [_trackArray insertObject:player atIndex:[_trackArray count]];
 }
 
 -(void)addTrack
 {
     RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav"];
+    auxButton.trackId = 1;
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:auxButton];
     [_eventList insertObject:auxButton atIndex:[_eventList count]];
 }
@@ -294,52 +285,24 @@
 -(void)addTrack1
 {
     RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav"];
+    auxButton.trackId = 0;
+    
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:auxButton];
     [_eventList insertObject:auxButton atIndex:[_eventList count]];
 }
 
-- (void)adjustToolbarSize
+-(void)addSample
 {
-    // size up the toolbar and set its frame
-	[self.toolbar sizeToFit];
-    
-    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
-	CGRect mainViewBounds = self.view.bounds;
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
-                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(mainViewBounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight);
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if ( ! UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft duration:duration];;
-    }else
-    
-    [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeRight duration:duration];
-}
-
--(NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskLandscape;
-}
-
--(void) play
-{
-    [self functionTest];
-    for(int i = 0 ; i < _checkboxArray.count; i++)
-    {
-        [_trackArray[i] startPlaying:_sampleNameArray[i] numberOfLoops:4 volumeLevel:0.8f];
-    }
+    RRSample *newSample = [[RRSample alloc]initWithSampleName:@"SampleName"];
+    newSample.trackId = 3;
+    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:newSample];
+    [_eventList insertObject:newSample atIndex:[_eventList count]];
 }
 
 -(void)stop
@@ -350,8 +313,13 @@
     {
         [player stopPlaying];
     }
-    [_player stopPlaying];
     _start = NO;
+
+    for(AudioPlayer *player in _trackArray)
+    {
+        [player stopPlaying];
+    }
+    
     for(RRSample *object in _eventList)
     {
         object.triggered = NO;
