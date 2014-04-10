@@ -10,10 +10,14 @@
 #import "AudioPlayer.h"
 #import "RRSampleListPlayButton.h"
 #import "RRSampleListDeleteButton.h"
+#import "Session.h"
+#import "DownloadedSamples.h"
+
 @interface SampleListViewController () <UITableViewDataSource,UITableViewDelegate>
 @property(strong,nonatomic) AudioPlayer *rec;
 @property(strong,nonatomic) NSMutableArray *sampleNamesArray;
 @property(strong, nonatomic) UITableView *myTableView;
+@property(strong,nonatomic) NSMutableArray *samplesArray;
 @end
 
 
@@ -33,6 +37,9 @@
     objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationPortrait);
     
     _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
+    _samplesArray = [[NSMutableArray alloc] init];
+    [self getSamples];
+    
     _myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
     //setez ca tinta pentru datasource si delegate viewcontroller-url
     
@@ -48,6 +55,7 @@
     _rec = [[AudioPlayer alloc] init];
     self.title = @"Samples";
     NSLog(@"Second view");
+    [self getSamples];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +67,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //returns number of rows
-    return [_sampleNamesArray count] - 1;
+    //return [_sampleNamesArray count] - 1;
+    return [_samplesArray count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -78,11 +87,17 @@
     static NSString* cellIdentifier = @"Cell";
     
     UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    RRSampleListPlayButton *playButton = [[RRSampleListPlayButton alloc] initWithFrame];
-    playButton.sampleName = _sampleNamesArray[indexPath.row];
+    DownloadedSamples *auxSample = (DownloadedSamples *)_samplesArray[indexPath.row];
+    RRSampleListPlayButton *playButton = [[RRSampleListPlayButton alloc] init1];
+    playButton.sampleName = auxSample.sampleUrl;
+    NSLog(@"%@",playButton.sampleName);
+    playButton.sampleUrl = auxSample.sampleUrl;
+    playButton.sampleHash = auxSample.sampleHash;
+//    playButton.sampleName = _sampleNamesArray[indexPath.row];
     UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,5,200,14)];
     [cellLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    cellLabel.text = [_sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [_sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
+    //cellLabel.text = [_sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [_sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
+    cellLabel.text = [auxSample.sampleName substringWithRange:NSMakeRange(0, [auxSample.sampleName rangeOfString: @"."].location)];
     cellLabel.textColor = [UIColor blackColor];
     cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
     cell.layer.borderWidth = 0.4f;
@@ -130,6 +145,39 @@
     //-----> LIST ALL FILES <-----// 
     NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0] error:NULL];
     return directoryContent;
+}
+
+- (void)getSamples
+{
+    // Create your request string with parameter name as defined in PHP file
+    NSString *myRequestString = @"token=673d0fefbee71ca8875ff3b5ac26f98011ade255";
+
+    // Create Data from request
+    NSData *myRequestData = [NSData dataWithBytes: [myRequestString UTF8String] length: [myRequestString length]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: [NSURL URLWithString: @"http://app.etajul9.ro/api/get_samples.php"]];
+    // set Request Type
+    [request setHTTPMethod: @"POST"];
+    // Set content-type
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
+    // Set Request Body
+    [request setHTTPBody: myRequestData];
+    // Now send a request and get Response
+    NSData *returnData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    // Log Response
+    NSString *response = [[NSString alloc] initWithBytes:[returnData bytes] length:[returnData length] encoding:NSUTF8StringEncoding];
+   // NSLog(@"%@",response);
+    
+    NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *e;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&e];
+    
+    for(NSDictionary *key in dict) {
+        
+        DownloadedSamples *sample = [[DownloadedSamples alloc] initWithSampleName:[NSString stringWithFormat:@"%@",[key objectForKey:@"sample_name"]] andSampleUrl:[NSString stringWithFormat:@"%@",[key objectForKey:@"sample_url"]] andHash:[NSString stringWithFormat:@"%@",[key objectForKey:@"sample_hash"]]];
+        NSLog(@"%@ %@",sample.sampleName,sample.sampleUrl);
+        [_samplesArray insertObject:sample atIndex:[_samplesArray count]];
+    }
+  //  return auxArray;
 }
 
 @end

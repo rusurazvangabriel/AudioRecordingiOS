@@ -273,7 +273,7 @@
 
 -(void)addTrack
 {
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav"];
+    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav" andSampleURL:@""];
     auxButton.trackId = 1;
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
@@ -284,7 +284,7 @@
 
 -(void)addTrack1
 {
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav"];
+    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
     auxButton.trackId = 0;
     
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
@@ -296,7 +296,7 @@
 
 -(void)addSample
 {
-    RRSample *newSample = [[RRSample alloc]initWithSampleName:@"SampleName"];
+    RRSample *newSample = [[RRSample alloc]initWithSampleName:@"SampleName" andSampleURL:@""];
     newSample.trackId = 3;
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];

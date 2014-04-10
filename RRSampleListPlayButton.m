@@ -13,7 +13,7 @@ AudioPlayer *ap;
 
 @implementation RRSampleListPlayButton
 
-- (id)initWithFrame
+- (id)init1
 {
     self = [super initWithFrame:CGRectMake(3, 3, 40, 40)];
     if (self) {
@@ -26,7 +26,8 @@ AudioPlayer *ap;
 - (void)playSample
 {
     ap = [[AudioPlayer alloc] init];
-    [ap startPlaying:_sampleName numberOfLoops:1 volumeLevel:1.0f];
+    [ap downloadSample:self.sampleUrl];
+    [ap startPlaying:self.sampleHash numberOfLoops:1 volumeLevel:1.0f];
 }
 /*
 // Only override drawRect: if you perform custom drawing.

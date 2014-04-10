@@ -12,11 +12,11 @@
 @interface RRSample : UIButton
 
 @property (strong,nonatomic) NSString *sampleName;
-
+@property (nonatomic,assign) NSURL *sampleURL;
 @property (nonatomic,assign) int trackId;
 
 @property (nonatomic,assign) BOOL triggered;
 
-- (id)initWithSampleName:(NSString *)name;
+- (id)initWithSampleName:(NSString *)name andSampleURL:(NSString *)url;
 
 @end

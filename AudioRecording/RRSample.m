@@ -10,12 +10,14 @@
 
 @implementation RRSample
 
-- (id)initWithSampleName:(NSString *)name
+- (id)initWithSampleName:(NSString *)name andSampleURL:(NSString *)url
 {
     self = [super initWithFrame:CGRectMake(100, 100, [self getSampleLengthForSamplename:name] * 10 - 1, 40)];
     if (self) {
         self.triggered = NO;
         self.sampleName = name;
+        self.sampleURL = [NSURL URLWithString:url];
+        
         [self setTitle:name forState:UIControlStateNormal];
         CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
         CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white

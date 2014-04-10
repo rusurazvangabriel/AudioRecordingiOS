@@ -70,6 +70,8 @@
 		8CF6FFCD18EC6E840099CF95 /* RRButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF6FFCC18EC6E840099CF95 /* RRButton.m */; };
 		8CF6FFD118EC70100099CF95 /* RRCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF6FFD018EC70100099CF95 /* RRCheckBox.m */; };
 		8CF6FFD618EC72E30099CF95 /* RRTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF6FFD518EC72E30099CF95 /* RRTextField.m */; };
+		8CF9FA9018F6C4C900F99029 /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF9FA8F18F6C4C900F99029 /* Session.m */; };
+		8CF9FA9318F6D78E00F99029 /* DownloadedSamples.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF9FA9218F6D78E00F99029 /* DownloadedSamples.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +185,10 @@
 		8CF6FFD018EC70100099CF95 /* RRCheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRCheckBox.m; sourceTree = "<group>"; };
 		8CF6FFD418EC72E30099CF95 /* RRTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRTextField.h; sourceTree = "<group>"; };
 		8CF6FFD518EC72E30099CF95 /* RRTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRTextField.m; sourceTree = "<group>"; };
+		8CF9FA8E18F6C4C900F99029 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		8CF9FA8F18F6C4C900F99029 /* Session.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Session.m; sourceTree = "<group>"; };
+		8CF9FA9118F6D78E00F99029 /* DownloadedSamples.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadedSamples.h; sourceTree = "<group>"; };
+		8CF9FA9218F6D78E00F99029 /* DownloadedSamples.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadedSamples.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,6 +299,8 @@
 				8CDE7BBE18D0C21C0082FE17 /* Main.storyboard */,
 				8CDE7BC418D0C21C0082FE17 /* Images.xcassets */,
 				8CDE7BB318D0C21C0082FE17 /* Supporting Files */,
+				8CF9FA8E18F6C4C900F99029 /* Session.h */,
+				8CF9FA8F18F6C4C900F99029 /* Session.m */,
 			);
 			path = AudioRecording;
 			sourceTree = "<group>";
@@ -385,6 +393,8 @@
 				8CF6FFBF18EC17490099CF95 /* AudioPlayer.m */,
 				8C21826318F2EF8C00A108F4 /* RRSample.h */,
 				8C21826418F2EF8C00A108F4 /* RRSample.m */,
+				8CF9FA9118F6D78E00F99029 /* DownloadedSamples.h */,
+				8CF9FA9218F6D78E00F99029 /* DownloadedSamples.m */,
 			);
 			name = AudioPlayer;
 			sourceTree = "<group>";
@@ -586,10 +596,12 @@
 				8CE71EE018E58AD500E40CBD /* UIProgressView+AFNetworking.m in Sources */,
 				8CE71ED418E58AD500E40CBD /* AFHTTPSessionManager.m in Sources */,
 				8CE71ED818E58AD500E40CBD /* AFURLRequestSerialization.m in Sources */,
+				8CF9FA9318F6D78E00F99029 /* DownloadedSamples.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
 				8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */,
 				8CE71EDF18E58AD500E40CBD /* UIImageView+AFNetworking.m in Sources */,
+				8CF9FA9018F6C4C900F99029 /* Session.m in Sources */,
 				8C5737FB18F59CC200BA8DA7 /* SignUpViewController.m in Sources */,
 				8CDE7BB918D0C21C0082FE17 /* main.m in Sources */,
 				8C5737F618F5918400BA8DA7 /* RRSampleListDeleteButton.m in Sources */,
