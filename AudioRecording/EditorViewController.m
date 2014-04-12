@@ -22,7 +22,6 @@
 @property (nonatomic) BOOL start;
 @property (nonatomic) BOOL played;
 @property (nonatomic) BOOL snap;
-
 @property (nonatomic, assign) int tempoPlaceholder;
 @property (strong, nonatomic) NSMutableArray *eventList;
 
@@ -36,44 +35,36 @@
                                                                     style:UIBarButtonItemStyleBordered
                                                                    target:self
                                                                    action:@selector(functionTest)];
+    
     UIImage *baseImage = [UIImage imageNamed:@"play.png"];
     UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
     [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
     [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
-    UIBarButtonItem *customItem2 = [[UIBarButtonItem alloc] initWithTitle:@"Stop"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(stop)];
-    [customItem2 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
-    UIBarButtonItem *customItem3 = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(goToMainView)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *customItem2 = [self createBarButtonWithTItle:@"Stop" andDelegate:@selector(stop)];
     
-    UIBarButtonItem *addTrackItem = [[UIBarButtonItem alloc] initWithTitle:@"AddBass"
-                                                                     style:UIBarButtonItemStyleBordered
-                                                                    target:self
-                                                                    action:@selector(addTrack)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *customItem3 = [self createBarButtonWithTItle:@"Back" andDelegate:@selector(goToMainView)];
     
-    UIBarButtonItem *addTrackItem1 = [[UIBarButtonItem alloc] initWithTitle:@"AddDrums"
-                                                                      style:UIBarButtonItemStyleBordered
-                                                                     target:self
-                                                                     action:@selector(addTrack1)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *addTrackItem = [self createBarButtonWithTItle:@"AddBass" andDelegate:@selector(addTrack)];
     
-    UIBarButtonItem *customItem4 = [[UIBarButtonItem alloc] initWithTitle:@"snap"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(setSnap)];
+    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTItle:@"AddDrums" andDelegate:@selector(addTrack1)];
     
-    [customItem4 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *customItem4 = [self createBarButtonWithTItle:@"Snap" andDelegate:@selector(setSnap)];
     
     [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, addTrackItem,addTrackItem1] animated:NO];
+}
+
+-(UIBarButtonItem *) createBarButtonWithTItle:(NSString *) title andDelegate:(SEL)selector
+{
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
+                                                                    style:UIBarButtonItemStyleBordered
+                                                                   target:self
+                                                                   action:@selector(selector)];
+    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    return barButton;
 }
 
 
@@ -125,23 +116,10 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	self.toolbar.barStyle = UIBarStyleDefault;
-	// size up the toolbar and set its frame
-    [self adjustToolbarSize];
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
-                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self createToolbarItems];
-	[self.view addSubview:self.toolbar];
+    [self initPropertiesBaseValues];
+    [self initToolbar];
     
-    _start = NO;
-    _played = NO;
-    _snap = NO;
-    [self initElements];
+    _eventList = [[NSMutableArray alloc] init];
     
     _trackArray = [[NSMutableArray alloc] init];
     _sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
@@ -160,11 +138,32 @@
     [self addChannel];
 }
 
+-(void)initToolbar
+{
+    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+	self.toolbar.barStyle = UIBarStyleDefault;
+	// size up the toolbar and set its frame
+    [self adjustToolbarSize];
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
+                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
+    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [self createToolbarItems];
+	[self.view addSubview:self.toolbar];
+}
+
+-(void) initPropertiesBaseValues
+{
+    _start = NO;
+    _played = NO;
+    _snap = NO;
+    _tempoPlaceholder = 3;
+}
 -(void) dragEnded:(id) sender
 {
-    
     RRSample* currentSample = (RRSample*) sender;
-    
     int separator = 50;
     int y = currentSample.center.y;
     int channel = 0;
@@ -175,13 +174,11 @@
             break;
         }
     }
-    
     CGRect frame = currentSample.frame;
     frame.origin.y = 30 + channel*separator - separator/2; // o sa fie rezolvata si asta
     currentSample.frame = frame;
     NSLog(@"S-a pus pe canalul %d", channel);
     currentSample.trackId = channel;
-    
     
     if (_snap) {
         int closestSampleCoordonate = [self getClosestSampleHorizontalCoordonate:currentSample];
@@ -210,31 +207,21 @@
         }
     }
     if (buttonToSnapTo != NULL) {
-        NSLog(@"buttonToSnapTo has x coordonate @%f", buttonToSnapTo.frame.origin.x);
         return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
     } else {
-        NSLog(@"null button");
         return 999;
     }
-}
-
--(void)initElements
-{
-    _tempoPlaceholder = 3;
-    _eventList = [[NSMutableArray alloc] init];
 }
 
 -(void)functionTest
 {
     if (!_start) {
-        _start = YES;
-        [self animationControl];
-    } else {
-        _start = NO;
+        [self runAnimationController];
     }
+    _start = !_start;
 }
 
--(void)animationControl
+-(void)runAnimationController
 {
     if(_start) {
         [self animationCycle];
@@ -265,7 +252,7 @@
                      animations:^{
                          _animationButton.center= CGPointMake(newX, _animationButton.center.y);
                      }
-                     completion:^(BOOL finished){[self animationControl];
+                     completion:^(BOOL finished){[self runAnimationController];
                      }];
 }
 
