@@ -19,7 +19,6 @@
 @property(strong,nonatomic) NSMutableArray *sampleNameArray;
 @property(strong,nonatomic) NSMutableArray *checkboxArray;
 
-@property (strong,nonatomic) NSMutableArray *sampleArray;
 @property (nonatomic, strong) UIToolbar	*toolbar;
 @property (weak, nonatomic) UIButton *animationButton;
 @property (nonatomic) BOOL start;
@@ -27,6 +26,7 @@
 @property (nonatomic) BOOL snap;
 @property (nonatomic, assign) int tempoPlaceholder;
 @property (strong, nonatomic) NSMutableArray *eventList;
+@property (strong,nonatomic) NSMutableArray *currentlyPausedPlayers;
 
 @end
 
@@ -79,7 +79,6 @@
     //NSData* data = [NSJSONSerialization dataWithJSONObject:project options:(0) error:nil];
     
     NSLog(@"STOP!!");
-    
     
 }
 
@@ -142,7 +141,10 @@
 {
     for(AudioPlayer *player in _trackArray)
     {
-        [player.audioPlayer pause];
+        if ([player.audioPlayer isPlaying]) {
+            [player.audioPlayer pause];
+            [_currentlyPausedPlayers addObject:player];
+        }
     }
 }
 
@@ -251,6 +253,7 @@
     _tempoPlaceholder = 3;
     _eventList = [[NSMutableArray alloc] init];
     _trackArray = [[NSMutableArray alloc] init];
+    _currentlyPausedPlayers = [[NSMutableArray alloc] init];
 }
 
 -(void)functionTest
@@ -273,15 +276,13 @@
 
 -(void)animationCycle
 {
-    #warning pause/resume?
-    /*
-    for (AudioPlayer* player in _trackArray)
-    {
+    for (AudioPlayer* player in _currentlyPausedPlayers) {
         if (player){
             [player.audioPlayer play];
         }
     }
-     */
+    [_currentlyPausedPlayers removeAllObjects];
+    
     for(RRSample *object in _eventList)
     {
         if(!object.triggered
