@@ -17,6 +17,7 @@
         self.triggered = NO;
         self.sampleName = name;
         self.sampleURL = [NSURL URLWithString:url];
+        self.trackId = -1;
         
         [self setTitle:name forState:UIControlStateNormal];
         CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0

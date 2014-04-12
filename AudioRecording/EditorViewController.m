@@ -21,14 +21,10 @@
 @property (weak, nonatomic) UIButton *animationButton;
 @property (nonatomic) BOOL start;
 @property (nonatomic) BOOL played;
+@property (nonatomic) BOOL snap;
 
-// general control references
 @property (nonatomic, assign) int tempoPlaceholder;
-// event object references
 @property (strong, nonatomic) NSMutableArray *eventList;
-
-
-
 
 @end
 
@@ -70,7 +66,20 @@
                                                                      action:@selector(addTrack1)];
     [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,addTrackItem,addTrackItem1] animated:NO];
+    UIBarButtonItem *customItem4 = [[UIBarButtonItem alloc] initWithTitle:@"snap"
+                                                                    style:UIBarButtonItemStyleBordered
+                                                                   target:self
+                                                                   action:@selector(setSnap)];
+    
+    [customItem4 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, addTrackItem,addTrackItem1] animated:NO];
+}
+
+
+-(void)setSnap
+{
+    _snap = !_snap;
 }
 
 - (void)adjustToolbarSize
@@ -131,6 +140,7 @@
     
     _start = NO;
     _played = NO;
+    _snap = NO;
     [self initElements];
     
     _trackArray = [[NSMutableArray alloc] init];
@@ -150,37 +160,52 @@
     [self addChannel];
 }
 
-/*----------------------------------------------------------------------------------------------------*/
-
 -(void) dragEnded:(id) sender
 {
-    NSLog(@"drag ended");
+    
     RRSample* currentSample = (RRSample*) sender;
-    int closestSampleCoordonate = [self getClosestSampleCoordonate:currentSample];
-    if (closestSampleCoordonate != 999) {
-        CGRect frame = currentSample.frame;
-        frame.origin.x = closestSampleCoordonate; // o sa fie rezolvata si asta
-        currentSample.frame = frame;
-    } else {
-        NSLog(@"nu a mers, lol");
+    
+    int separator = 50;
+    int y = currentSample.center.y;
+    int channel = 0;
+    
+    for (int i = 0; i < 6; i++){
+        if (y < 30 +  (i)*separator + separator/2) {
+            channel = i;
+            break;
+        }
     }
+    
+    CGRect frame = currentSample.frame;
+    frame.origin.y = 30 + channel*separator - separator/2; // o sa fie rezolvata si asta
+    currentSample.frame = frame;
+    NSLog(@"S-a pus pe canalul %d", channel);
+    currentSample.trackId = channel;
+    
+    
+    if (_snap) {
+        int closestSampleCoordonate = [self getClosestSampleHorizontalCoordonate:currentSample];
+        if (closestSampleCoordonate != 999) {
+            CGRect frame = currentSample.frame;
+            frame.origin.x = closestSampleCoordonate;
+            currentSample.frame = frame;
+        }
+    }
+    
 }
 
--(int) getClosestSampleCoordonate:(RRSample*) currentSample
+-(int) getClosestSampleHorizontalCoordonate:(RRSample*) currentSample
 {
     int vecinity = 20;
     int minDistance = 999;
-    UIButton* buttonToSnapTo;
-    for (UIButton *button in _eventList)
+    RRSample* buttonToSnapTo;
+    for (RRSample *button in _eventList)
     {
-        if (button != currentSample){
+        if (button != currentSample) {
             int distance = currentSample.frame.origin.x - (button.frame.origin.x + button.frame.size.width);
-            {
-                if(abs(distance) < vecinity && distance < minDistance)
-                {
+            if(abs(distance) < vecinity && distance < minDistance && currentSample.trackId == button.trackId){
                     minDistance = distance;
                     buttonToSnapTo = button;
-                }
             }
         }
     }
