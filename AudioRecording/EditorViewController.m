@@ -158,6 +158,8 @@
     [self addChannel];
     [self addChannel];
     [self addChannel];
+    [self addChannel];
+    [self addChannel];
 }
 
 -(void) dragEnded:(id) sender
