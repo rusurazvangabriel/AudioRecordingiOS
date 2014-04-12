@@ -136,6 +136,8 @@
     [self addChannel];
     [self addChannel];
     [self addChannel];
+    [self addChannel];
+    [self addChannel];
 }
 
 -(void)initToolbar
