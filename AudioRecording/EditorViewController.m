@@ -25,7 +25,6 @@
 @property (nonatomic) BOOL start;
 @property (nonatomic) BOOL played;
 @property (nonatomic) BOOL snap;
-
 @property (nonatomic, assign) int tempoPlaceholder;
 @property (strong, nonatomic) NSMutableArray *eventList;
 
@@ -39,6 +38,7 @@
                                                                     style:UIBarButtonItemStyleBordered
                                                                    target:self
                                                                    action:@selector(functionTest)];
+    
     UIImage *baseImage = [UIImage imageNamed:@"play.png"];
     UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
     [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
@@ -91,6 +91,17 @@
                                                                       style:UIBarButtonItemStyleBordered
                                                                      target:self
                                                                      action:delegate];
+    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    return barButton;
+}
+
+-(UIBarButtonItem *) createBarButtonWithTItle:(NSString *) title andDelegate:(SEL)selector
+{
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
+                                                                    style:UIBarButtonItemStyleBordered
+                                                                   target:self
+                                                                   action:@selector(selector)];
     [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     return barButton;
 }
@@ -192,9 +203,31 @@
     [self addChannel];
 }
 
+-(void)initToolbar
+{
+    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+	self.toolbar.barStyle = UIBarStyleDefault;
+	// size up the toolbar and set its frame
+    [self adjustToolbarSize];
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
+                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
+    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [self createToolbarItems];
+	[self.view addSubview:self.toolbar];
+}
+
+-(void) initPropertiesBaseValues
+{
+    _start = NO;
+    _played = NO;
+    _snap = NO;
+    _tempoPlaceholder = 3;
+}
 -(void) dragEnded:(id) sender
 {
-    
     RRSample* currentSample = (RRSample*) sender;
     
     int separator = 42;
@@ -207,7 +240,6 @@
             break;
         }
     }
-    
     CGRect frame = currentSample.frame;
     frame.origin.y = 30 + channel*separator - separator/2; // o sa fie rezolvata si asta
     currentSample.frame = frame;
@@ -264,9 +296,10 @@
         _start = NO;
         [self pausePlayers];
     }
+    _start = !_start;
 }
 
--(void)animationControl
+-(void)runAnimationController
 {
     if(_start) {
         [self animationCycle];
@@ -306,7 +339,7 @@
                      animations:^{
                          _animationButton.center= CGPointMake(newX, _animationButton.center.y);
                      }
-                     completion:^(BOOL finished){[self animationControl];
+                     completion:^(BOOL finished){[self runAnimationController];
                      }];
 }
 
