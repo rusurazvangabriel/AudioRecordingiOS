@@ -95,17 +95,6 @@
     return barButton;
 }
 
--(UIBarButtonItem *) createBarButtonWithTItle:(NSString *) title andDelegate:(SEL)selector
-{
-    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(selector)];
-    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    return barButton;
-}
-
 
 -(void)setSnap
 {
@@ -203,29 +192,6 @@
     [self addChannel];
 }
 
--(void)initToolbar
-{
-    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	self.toolbar.barStyle = UIBarStyleDefault;
-	// size up the toolbar and set its frame
-    [self adjustToolbarSize];
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
-                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [self createToolbarItems];
-	[self.view addSubview:self.toolbar];
-}
-
--(void) initPropertiesBaseValues
-{
-    _start = NO;
-    _played = NO;
-    _snap = NO;
-    _tempoPlaceholder = 3;
-}
 -(void) dragEnded:(id) sender
 {
     RRSample* currentSample = (RRSample*) sender;
@@ -291,12 +257,11 @@
 {
     if (!_start) {
         _start = YES;
-        [self animationControl];
+        [self runAnimationController];
     } else {
         _start = NO;
         [self pausePlayers];
     }
-    _start = !_start;
 }
 
 -(void)runAnimationController
