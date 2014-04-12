@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 LaboratoriOS Cronian Academy. All rights reserved.
 //
 
-#import "ViewController.h"
 #import "MainViewController.h"
 #import "RecordingViewController.h"
 #import "SampleListViewController.h"
@@ -19,7 +18,6 @@
 @property (strong, nonatomic) RRButton *editorViewButton;
 @property (strong, nonatomic) EditorViewController *editor;
 @property (strong, nonatomic) SampleListViewController *sampleList;
-@property (strong, nonatomic) ViewController *test;
 @end
 
 @implementation MainViewController
@@ -32,7 +30,6 @@
     
     _editor = [[EditorViewController alloc] init];
     _sampleList = [[SampleListViewController alloc]init];
-    _test = [[ViewController alloc]init];
     
     float X_Image = (self.view.frame.size.width - 148)/2;
     UIImageView *logo = [[UIImageView alloc] initWithFrame:CGRectMake(X_Image, 60, 140, 140)];
