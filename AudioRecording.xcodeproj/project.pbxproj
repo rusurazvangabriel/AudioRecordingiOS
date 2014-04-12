@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		57B301F718F9A42B0002495C /* VBProjectState.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B301F618F9A42B0002495C /* VBProjectState.m */; };
+		57B301FA18F9A5B80002495C /* VBSampleForSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B301F918F9A5B80002495C /* VBSampleForSerialization.m */; };
 		8C03E4DC18EEB01700117D48 /* RRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C03E4DB18EEB01700117D48 /* RRTableViewCell.m */; };
 		8C03E4DE18EEBFF900117D48 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C03E4DD18EEBFF900117D48 /* play.png */; };
 		8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */; };
@@ -85,6 +87,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		57B301F518F9A42B0002495C /* VBProjectState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBProjectState.h; sourceTree = "<group>"; };
+		57B301F618F9A42B0002495C /* VBProjectState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBProjectState.m; sourceTree = "<group>"; };
+		57B301F818F9A5B80002495C /* VBSampleForSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBSampleForSerialization.h; sourceTree = "<group>"; };
+		57B301F918F9A5B80002495C /* VBSampleForSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBSampleForSerialization.m; sourceTree = "<group>"; };
 		8C03E4DA18EEB01700117D48 /* RRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRTableViewCell.h; sourceTree = "<group>"; };
 		8C03E4DB18EEB01700117D48 /* RRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRTableViewCell.m; sourceTree = "<group>"; };
 		8C03E4DD18EEBFF900117D48 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
@@ -215,6 +221,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		57B301F418F9A3FC0002495C /* ProjectState */ = {
+			isa = PBXGroup;
+			children = (
+				57B301F518F9A42B0002495C /* VBProjectState.h */,
+				57B301F618F9A42B0002495C /* VBProjectState.m */,
+				57B301F818F9A5B80002495C /* VBSampleForSerialization.h */,
+				57B301F918F9A5B80002495C /* VBSampleForSerialization.m */,
+			);
+			name = ProjectState;
+			sourceTree = "<group>";
+		};
 		8C03E4D918EEAFED00117D48 /* CustomTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +296,7 @@
 		8CDE7BB218D0C21C0082FE17 /* AudioRecording */ = {
 			isa = PBXGroup;
 			children = (
+				57B301F418F9A3FC0002495C /* ProjectState */,
 				8CF6FFC118EC4D790099CF95 /* AudioPlayer */,
 				8CE71EAE18E58AD500E40CBD /* AFNetworking */,
 				8CE71EC218E58AD500E40CBD /* UIKit+AFNetworking */,
@@ -599,6 +617,8 @@
 				8CF9FA9318F6D78E00F99029 /* DownloadedSamples.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
+				57B301F718F9A42B0002495C /* VBProjectState.m in Sources */,
+				57B301FA18F9A5B80002495C /* VBSampleForSerialization.m in Sources */,
 				8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */,
 				8CE71EDF18E58AD500E40CBD /* UIImageView+AFNetworking.m in Sources */,
 				8CF9FA9018F6C4C900F99029 /* Session.m in Sources */,

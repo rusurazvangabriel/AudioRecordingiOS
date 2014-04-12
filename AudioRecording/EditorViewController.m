@@ -10,6 +10,9 @@
 #import "AudioPlayer.h"
 #import "MainViewController.h"
 
+#import "VBProjectState.h"
+#import "VBSampleForSerialization.h"
+
 @interface EditorViewController () //<UITableViewDataSource,UITableViewDelegate>
 
 @property(strong,nonatomic) NSMutableArray *trackArray;
@@ -43,17 +46,41 @@
     [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
-    
     UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
-    
-    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddBass" andDelegate:@selector(addTrack)];
-    
-    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddDrums" andDelegate:@selector(addTrack1)];   
-    
+    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddB" andDelegate:@selector(addTrack)];
+    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddD" andDelegate:@selector(addTrack1)];
     UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
+    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
+    
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5, addTrackItem,addTrackItem1] animated:NO];
+}
+
+-(void) save
+{
+    NSLog(@"SAVE");
+    NSMutableArray* sampleList = [[NSMutableArray alloc] init];
+    for (RRSample* sample in _eventList){
+        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
+                                      // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
+        
+#warning halp
+        //s.url = sample.sampleURL;
+        s.channel = sample.trackId;
+        s.xvalue = sample.frame.origin.x;
+        [sampleList addObject:s];
+        
+        //NSDictionary dictionary = [s dictionary];
+        BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
+        
+    }
+    
+    //VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
+    //BOOL ceva = [NSJSONSerialization isValidJSONObject:project];
+    //NSData* data = [NSJSONSerialization dataWithJSONObject:project options:(0) error:nil];
+    
+    NSLog(@"STOP!!");
     
     
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, addTrackItem,addTrackItem1] animated:NO];
 }
 
 
@@ -109,6 +136,14 @@
 -(NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskLandscape;
+}
+
+-(void)pausePlayers
+{
+    for(AudioPlayer *player in _trackArray)
+    {
+        [player.audioPlayer pause];
+    }
 }
 
 -(void)initToolbarWithButtons
@@ -227,6 +262,7 @@
         [self animationControl];
     } else {
         _start = NO;
+        [self pausePlayers];
     }
 }
 
@@ -239,6 +275,15 @@
 
 -(void)animationCycle
 {
+    #warning pause/resume?
+    /*
+    for (AudioPlayer* player in _trackArray)
+    {
+        if (player){
+            [player.audioPlayer play];
+        }
+    }
+     */
     for(RRSample *object in _eventList)
     {
         if(!object.triggered
