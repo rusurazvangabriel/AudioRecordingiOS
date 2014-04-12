@@ -22,7 +22,6 @@
 @property (nonatomic) BOOL start;
 @property (nonatomic) BOOL played;
 @property (nonatomic) BOOL snap;
-
 @property (nonatomic, assign) int tempoPlaceholder;
 @property (strong, nonatomic) NSMutableArray *eventList;
 
@@ -138,9 +137,8 @@
     [self createToolbarItems];
 	[self.view addSubview:self.toolbar];
     
-    _start = NO;
-    _played = NO;
-    _snap = NO;
+    
+    [self initPropertiesBaseValues];
     [self initElements];
     
     _trackArray = [[NSMutableArray alloc] init];
@@ -160,6 +158,12 @@
     [self addChannel];
 }
 
+-(void) initPropertiesBaseValues
+{
+    _start = NO;
+    _played = NO;
+    _snap = NO;
+}
 -(void) dragEnded:(id) sender
 {
     
