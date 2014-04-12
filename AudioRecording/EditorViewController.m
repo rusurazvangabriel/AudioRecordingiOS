@@ -42,38 +42,30 @@
     NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
     [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
-    UIBarButtonItem *customItem2 = [[UIBarButtonItem alloc] initWithTitle:@"Stop"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(stop)];
-    [customItem2 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
     
-    UIBarButtonItem *customItem3 = [[UIBarButtonItem alloc] initWithTitle:@"Back"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(goToMainView)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
     
-    UIBarButtonItem *addTrackItem = [[UIBarButtonItem alloc] initWithTitle:@"AddBass"
-                                                                     style:UIBarButtonItemStyleBordered
-                                                                    target:self
-                                                                    action:@selector(addTrack)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddBass" andDelegate:@selector(addTrack)];
     
-    UIBarButtonItem *addTrackItem1 = [[UIBarButtonItem alloc] initWithTitle:@"AddDrums"
-                                                                      style:UIBarButtonItemStyleBordered
-                                                                     target:self
-                                                                     action:@selector(addTrack1)];
-    [customItem3 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddDrums" andDelegate:@selector(addTrack1)];   
     
-    UIBarButtonItem *customItem4 = [[UIBarButtonItem alloc] initWithTitle:@"snap"
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(setSnap)];
+    UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
     
-    [customItem4 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     
     [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, addTrackItem,addTrackItem1] animated:NO];
+}
+
+
+-(UIBarButtonItem*) createBarButtonWithTitle:(NSString*) title andDelegate:(SEL)delegate
+{
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
+                                                                      style:UIBarButtonItemStyleBordered
+                                                                     target:self
+                                                                     action:delegate];
+    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    return barButton;
 }
 
 
@@ -86,7 +78,6 @@
 {
     // size up the toolbar and set its frame
 	[self.toolbar sizeToFit];
-    
     // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
 	CGRect mainViewBounds = self.view.bounds;
 	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
@@ -120,11 +111,8 @@
     return UIInterfaceOrientationMaskLandscape;
 }
 
-- (void)viewDidLoad
+-(void)initToolbarWithButtons
 {
-    [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
-    
     _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
 	self.toolbar.barStyle = UIBarStyleDefault;
 	// size up the toolbar and set its frame
@@ -135,15 +123,21 @@
                                       CGRectGetHeight(self.toolbar.frame))];
     // make so the toolbar stays to the bottom and keep the width matching the device's screen width
     self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
     [self createToolbarItems];
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    
+    
+    [self initToolbarWithButtons];
 	[self.view addSubview:self.toolbar];
+    [self initPropertiesWithBaseValues];
     
-    _start = NO;
-    _played = NO;
-    _snap = NO;
-    [self initElements];
-    
-    _trackArray = [[NSMutableArray alloc] init];
     _sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
     
     _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -160,6 +154,7 @@
     [self addChannel];
     [self addChannel];
     [self addChannel];
+    [self addChannel];
 }
 
 -(void) dragEnded:(id) sender
@@ -167,7 +162,7 @@
     
     RRSample* currentSample = (RRSample*) sender;
     
-    int separator = 50;
+    int separator = 42;
     int y = currentSample.center.y;
     int channel = 0;
     
@@ -181,13 +176,11 @@
     CGRect frame = currentSample.frame;
     frame.origin.y = 30 + channel*separator - separator/2; // o sa fie rezolvata si asta
     currentSample.frame = frame;
-    NSLog(@"S-a pus pe canalul %d", channel);
     currentSample.trackId = channel;
-    
     
     if (_snap) {
         int closestSampleCoordonate = [self getClosestSampleHorizontalCoordonate:currentSample];
-        if (closestSampleCoordonate != 999) {
+        if (closestSampleCoordonate != 9999) {
             CGRect frame = currentSample.frame;
             frame.origin.x = closestSampleCoordonate;
             currentSample.frame = frame;
@@ -199,7 +192,7 @@
 -(int) getClosestSampleHorizontalCoordonate:(RRSample*) currentSample
 {
     int vecinity = 20;
-    int minDistance = 999;
+    int minDistance = 9999;
     RRSample* buttonToSnapTo;
     for (RRSample *button in _eventList)
     {
@@ -212,18 +205,19 @@
         }
     }
     if (buttonToSnapTo != NULL) {
-        NSLog(@"buttonToSnapTo has x coordonate @%f", buttonToSnapTo.frame.origin.x);
         return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
-    } else {
-        NSLog(@"null button");
-        return 999;
     }
+    return 9999;
 }
 
--(void)initElements
+-(void)initPropertiesWithBaseValues
 {
+    _start = NO;
+    _played = NO;
+    _snap = NO;
     _tempoPlaceholder = 3;
     _eventList = [[NSMutableArray alloc] init];
+    _trackArray = [[NSMutableArray alloc] init];
 }
 
 -(void)functionTest
@@ -313,7 +307,6 @@
 {
     RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
     auxButton.trackId = 0;
-    
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
     [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
@@ -334,19 +327,12 @@
 
 -(void)stop
 {
-    NSLog(@"STOP");
     _animationButton.center = CGPointMake(1, _animationButton.center.y);
-    for(AudioPlayer *player in _trackArray)
-    {
-        [player stopPlaying];
-    }
     _start = NO;
-
     for(AudioPlayer *player in _trackArray)
     {
         [player stopPlaying];
     }
-    
     for(RRSample *object in _eventList)
     {
         object.triggered = NO;
@@ -359,6 +345,7 @@
     {
         [player.audioPlayer stop];
     }
+#warning will have to preserver state before exit
     
 }
 
