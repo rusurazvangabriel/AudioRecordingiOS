@@ -10,13 +10,13 @@
 
 @interface VBSampleForSerialization : NSObject
 
-@property(strong,nonatomic) NSURL* url;
+@property(strong,nonatomic) NSString* name;
 
 @property(nonatomic) int channel;
 
 @property(nonatomic) int xvalue;
 
--(VBSampleForSerialization*) initWithUrl:(NSURL*) name andChannel:(int) channelId andPosition:(int) xValue;
+-(VBSampleForSerialization*) initWithName:(NSString*) name andChannel:(int) channelId andPosition:(int) xValue;
 
 -(NSDictionary*)dictionary;
 

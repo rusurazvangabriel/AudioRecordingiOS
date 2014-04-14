@@ -13,7 +13,7 @@
 #import "VBProjectState.h"
 #import "VBSampleForSerialization.h"
 
-@interface EditorViewController () //<UITableViewDataSource,UITableViewDelegate>
+@interface EditorViewController ()
 
 @property(strong,nonatomic) NSMutableArray *trackArray;
 @property(strong,nonatomic) NSMutableArray *sampleNameArray;
@@ -22,7 +22,6 @@
 @property (nonatomic, strong) UIToolbar	*toolbar;
 @property (weak, nonatomic) UIButton *animationButton;
 @property (nonatomic) BOOL start;
-@property (nonatomic) BOOL played;
 @property (nonatomic) BOOL snap;
 @property (nonatomic, assign) int tempoPlaceholder;
 @property (strong, nonatomic) NSMutableArray *eventList;
@@ -32,85 +31,8 @@
 
 @implementation EditorViewController
 
-- (void)createToolbarItems
-{
-    UIBarButtonItem *customItem1 = [[UIBarButtonItem alloc] initWithTitle:@""
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(functionTest)];
-    
-    UIImage *baseImage = [UIImage imageNamed:@"play.png"];
-    UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
-    [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
-    [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    
-    UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
-    UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
-    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddB" andDelegate:@selector(addTrack)];
-    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddD" andDelegate:@selector(addTrack1)];
-    UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
-    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
-    
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5, addTrackItem,addTrackItem1] animated:NO];
-}
-
--(void) save
-{
-    NSLog(@"SAVE");
-    NSMutableArray* sampleList = [[NSMutableArray alloc] init];
-    for (RRSample* sample in _eventList){
-        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
-                                      // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
-        
-#warning halp
-        //s.url = sample.sampleURL;
-        s.channel = sample.trackId;
-        s.xvalue = sample.frame.origin.x;
-        [sampleList addObject:s];
-        
-        //NSDictionary dictionary = [s dictionary];
-        BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
-        
-    }
-    
-    //VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
-    //BOOL ceva = [NSJSONSerialization isValidJSONObject:project];
-    //NSData* data = [NSJSONSerialization dataWithJSONObject:project options:(0) error:nil];
-    
-    NSLog(@"STOP!!");
-    
-}
-
-
--(UIBarButtonItem*) createBarButtonWithTitle:(NSString*) title andDelegate:(SEL)delegate
-{
-    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
-                                                                      style:UIBarButtonItemStyleBordered
-                                                                     target:self
-                                                                     action:delegate];
-    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    return barButton;
-}
-
-
--(void)setSnap
-{
-    _snap = !_snap;
-}
-
-- (void)adjustToolbarSize
-{
-    // size up the toolbar and set its frame
-	[self.toolbar sizeToFit];
-    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
-	CGRect mainViewBounds = self.view.bounds;
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
-                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(mainViewBounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-}
+#pragma mark -
+#pragma mark Obj-C cryptic stuff
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -137,33 +59,24 @@
     return UIInterfaceOrientationMaskLandscape;
 }
 
--(void)pausePlayers
+- (void)viewWillDisappear:(BOOL)animated
 {
     for(AudioPlayer *player in _trackArray)
     {
-        if ([player.audioPlayer isPlaying]) {
-            [player.audioPlayer pause];
-            [_currentlyPausedPlayers addObject:player];
-        }
+        [player.audioPlayer stop];
     }
+#warning will have to preserver state before exit
+    
 }
 
--(void)initToolbarWithButtons
+- (void)didReceiveMemoryWarning
 {
-    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	self.toolbar.barStyle = UIBarStyleDefault;
-	// size up the toolbar and set its frame
-    [self adjustToolbarSize];
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
-                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    
-    [self createToolbarItems];
-    
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
+
+#pragma mark -
+#pragma mark View init and UI item creation
 
 - (void)viewDidLoad
 {
@@ -192,6 +105,169 @@
     [self addChannel];
     [self addChannel];
     [self addChannel];
+}
+
+-(void)initPropertiesWithBaseValues
+{
+    _start = NO;
+    _snap = NO;
+    _tempoPlaceholder = 3;
+    _eventList = [[NSMutableArray alloc] init];
+    _trackArray = [[NSMutableArray alloc] init];
+    _currentlyPausedPlayers = [[NSMutableArray alloc] init];
+}
+
+- (void)createToolbarItems
+{
+    UIBarButtonItem *customItem1 = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                                    style:UIBarButtonItemStyleBordered
+                                                                   target:self
+                                                                   action:@selector(functionTest)];
+    
+    UIImage *baseImage = [UIImage imageNamed:@"play.png"];
+    UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
+    [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    
+    UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
+    UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
+    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddB" andDelegate:@selector(addTrack)];
+    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddD" andDelegate:@selector(addTrack1)];
+    UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(toggleSnap)];
+    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(saveState)];
+    
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5, addTrackItem,addTrackItem1] animated:NO];
+}
+
+- (void)adjustToolbarSize
+{
+    // size up the toolbar and set its frame
+	[self.toolbar sizeToFit];
+    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
+	CGRect mainViewBounds = self.view.bounds;
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
+                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(mainViewBounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+}
+
+-(UIBarButtonItem*) createBarButtonWithTitle:(NSString*) title andDelegate:(SEL)delegate
+{
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
+                                                                  style:UIBarButtonItemStyleBordered
+                                                                 target:self
+                                                                 action:delegate];
+    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    return barButton;
+}
+
+-(void)initToolbarWithButtons
+{
+    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+	self.toolbar.barStyle = UIBarStyleDefault;
+	// size up the toolbar and set its frame
+    [self adjustToolbarSize];
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
+                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
+    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
+    [self createToolbarItems];
+    
+}
+
+#pragma mark -
+#pragma mark General UI accessible controllers
+
+-(void)functionTest
+{
+    if (!_start) {
+        _start = YES;
+        [self runAnimationController];
+    } else {
+        _start = NO;
+        [self pausePlayers];
+    }
+}
+
+-(void)saveState
+{
+    NSMutableArray* sampleList = [[NSMutableArray alloc] init];
+    for (RRSample* sample in _eventList){
+        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] initWithName:sample.sampleName andChannel:sample.trackId andPosition:sample.frame.origin.x];
+        [sampleList addObject:[s dictionary]];
+    }
+    
+    VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
+    BOOL ceva = [NSJSONSerialization isValidJSONObject:[project dictionary]];
+    NSData* data = [NSJSONSerialization dataWithJSONObject:[project dictionary] options:(0) error:nil];
+
+}
+
+-(void)toggleSnap
+{
+    _snap = !_snap;
+}
+
+-(void)goToMainView
+{
+    _start = NO;
+    MainViewController *mv = [[MainViewController alloc] init];
+    [self.navigationController pushViewController:mv animated:YES];
+}
+
+-(void)addTrack
+{
+    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav" andSampleURL:@""];
+    auxButton.trackId = 1;
+    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:auxButton];
+    [_eventList insertObject:auxButton atIndex:[_eventList count]];
+}
+
+-(void)addTrack1
+{
+    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
+    auxButton.trackId = 0;
+    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:auxButton];
+    [_eventList insertObject:auxButton atIndex:[_eventList count]];
+}
+
+-(void)stop
+{
+    _animationButton.center = CGPointMake(1, _animationButton.center.y);
+    _start = NO;
+    for(AudioPlayer *player in _trackArray)
+    {
+        [player stopPlaying];
+    }
+    for(RRSample *object in _eventList)
+    {
+        object.triggered = NO;
+    }
+}
+
+#pragma mark -
+#pragma mark Other methods
+
+-(void)pausePlayers
+{
+    for(AudioPlayer *player in _trackArray)
+    {
+        if ([player.audioPlayer isPlaying]) {
+            [player.audioPlayer pause];
+            [_currentlyPausedPlayers addObject:player];
+        }
+    }
 }
 
 -(void) dragEnded:(id) sender
@@ -243,28 +319,6 @@
         return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
     }
     return 9999;
-}
-
--(void)initPropertiesWithBaseValues
-{
-    _start = NO;
-    _played = NO;
-    _snap = NO;
-    _tempoPlaceholder = 3;
-    _eventList = [[NSMutableArray alloc] init];
-    _trackArray = [[NSMutableArray alloc] init];
-    _currentlyPausedPlayers = [[NSMutableArray alloc] init];
-}
-
--(void)functionTest
-{
-    if (!_start) {
-        _start = YES;
-        [self runAnimationController];
-    } else {
-        _start = NO;
-        [self pausePlayers];
-    }
 }
 
 -(void)runAnimationController
@@ -323,39 +377,10 @@
     control.center = center;
 }
 
--(void)goToMainView
-{
-    _start = NO;
-    MainViewController *mv = [[MainViewController alloc] init];
-    [self.navigationController pushViewController:mv animated:YES];
-}
-
 -(void)addChannel
 {
     AudioPlayer *player = [[AudioPlayer alloc] init];
     [_trackArray insertObject:player atIndex:[_trackArray count]];
-}
-
--(void)addTrack
-{
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav" andSampleURL:@""];
-    auxButton.trackId = 1;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
-}
-
--(void)addTrack1
-{
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
-    auxButton.trackId = 0;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
 }
 
 -(void)addSample
@@ -367,36 +392,6 @@
     [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:newSample];
     [_eventList insertObject:newSample atIndex:[_eventList count]];
-}
-
--(void)stop
-{
-    _animationButton.center = CGPointMake(1, _animationButton.center.y);
-    _start = NO;
-    for(AudioPlayer *player in _trackArray)
-    {
-        [player stopPlaying];
-    }
-    for(RRSample *object in _eventList)
-    {
-        object.triggered = NO;
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    for(AudioPlayer *player in _trackArray)
-    {
-        [player.audioPlayer stop];
-    }
-#warning will have to preserver state before exit
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

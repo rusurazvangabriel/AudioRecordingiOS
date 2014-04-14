@@ -11,11 +11,11 @@
 @interface VBProjectState ()
 
 /*
-
-@property(strong, nonatomic) NSString* name;
-
-@property(nonatomic) int tempo;
-*/
+ 
+ @property(strong, nonatomic) NSString* name;
+ 
+ @property(nonatomic) int tempo;
+ */
 
 @property(strong,nonatomic) NSArray* sampleList;
 
@@ -32,7 +32,8 @@
 }
 
 -(NSDictionary*)dictionary {
-    return [NSDictionary dictionaryWithObjectsAndKeys:self.sampleList, @"sampleList", nil];
+    NSDictionary *dictonary = [NSDictionary dictionaryWithObjectsAndKeys:self.sampleList, @"sampleList", nil];
+    return dictonary;
 }
 
 @end

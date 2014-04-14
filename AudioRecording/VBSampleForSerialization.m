@@ -10,17 +10,18 @@
 
 @implementation VBSampleForSerialization
 
--(VBSampleForSerialization*) initWithUrl:(NSURL*) url andChannel:(int) channelId andPosition:(int) xValue
+-(VBSampleForSerialization*) initWithName:(NSString*) name andChannel:(int) channelId andPosition:(int) xValue
 {
     self = [super init];
-    self.url = url;
+    self.name = name;
     self.channel = channelId;
-    self.xvalue = xValue;    
+    self.xvalue = xValue;
     return self;
 }
 
 -(NSDictionary*)dictionary {
-    return [NSDictionary dictionaryWithObjectsAndKeys:self.url, @"url", self.channel, @"channel", self.xvalue, @"xvalue", nil];
+    NSDictionary * dict =  [NSDictionary dictionaryWithObjectsAndKeys:self.name, @"url",  [NSNumber numberWithInt:self.channel], @"channel", [NSNumber numberWithInt:self.xvalue], @"xvalue", nil];
+    return dict;
 }
 
 @end
