@@ -9,14 +9,21 @@
 #import "EditorViewController.h"
 #import "AudioPlayer.h"
 #import "MainViewController.h"
+#import "RRSampleListPlayButton.h"
 
 #import "VBProjectState.h"
 #import "VBSampleForSerialization.h"
 
-@interface EditorViewController () //<UITableViewDataSource,UITableViewDelegate>
+#import "EditorSampleListViewController.h"
+#import "UIViewController+MJPopupViewController.h"
+
+#import "RRSampleAddButton.h"
+
+@interface EditorViewController () <UITableViewDataSource,UITableViewDelegate>
+
+@property(strong, nonatomic) NSMutableArray *sampleNamesArray;
 
 @property(strong,nonatomic) NSMutableArray *trackArray;
-@property(strong,nonatomic) NSMutableArray *sampleNameArray;
 @property(strong,nonatomic) NSMutableArray *checkboxArray;
 
 @property (nonatomic, strong) UIToolbar	*toolbar;
@@ -28,6 +35,8 @@
 @property (strong, nonatomic) NSMutableArray *eventList;
 @property (strong,nonatomic) NSMutableArray *currentlyPausedPlayers;
 
+@property (strong, nonatomic) UIView *sampleListView;
+@property (strong, nonatomic) UITableView *sampleListTableView;
 @end
 
 @implementation EditorViewController
@@ -47,13 +56,97 @@
     
     UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
     UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
-    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddB" andDelegate:@selector(addTrack)];
-    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddD" andDelegate:@selector(addTrack1)];
     UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
     UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
-    
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5, addTrackItem,addTrackItem1] animated:NO];
+    UIBarButtonItem *customItem6 = [self createBarButtonWithTitle:@"+" andDelegate:@selector(add)];
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6] animated:NO];
 }
+
+-(void)add
+{
+//    EditorSampleListViewController *mvc = [[EditorSampleListViewController alloc] init];
+//    [self presentPopupViewController:mvc animationType:MJPopupViewAnimationSlideLeftRight];
+//    NSLog(@"%@",mvc.addedSample);
+    _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
+    NSLog(@"w:%f,h:%f",self.view.frame.size.width,self.view.frame.size.height);
+    
+    _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.3f];
+    float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
+    _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
+    _sampleListTableView.backgroundColor = [UIColor whiteColor];
+    _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    _sampleListTableView.layer.borderWidth = 1.0f;
+    _sampleListTableView.layer.cornerRadius = 10.0f;
+//    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(20, 20, 50, 50)];
+//    btn.backgroundColor = [UIColor blackColor];
+//    [btn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
+//    [_mv addSubview:btn];
+    _sampleListTableView.delegate = self;
+    _sampleListTableView.dataSource = self;
+    [_sampleListView addSubview:_sampleListTableView];
+    [self.view addSubview:_sampleListView];
+};
+
+-(NSArray *)listFileAtPath
+{
+    //-----> LIST ALL FILES <-----//
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0] error:NULL];
+    return directoryContent;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    //returns number of rows
+    return [_sampleNamesArray count] - 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    //returns number of samples
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 50;
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* cellIdentifier = @"Cell";
+    
+    UITableViewCell* cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    RRSampleListPlayButton *playButton = [[RRSampleListPlayButton alloc] init1];
+    playButton.sampleName = _sampleNamesArray[indexPath.row];
+    //    NSLog(@"%@",playButton.sampleName);
+    //    playButton.sampleUrl = auxSample.sampleUrl;
+    //    playButton.sampleHash = auxSample.sampleHash;
+    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,5,200,14)];
+    [cellLabel setFont:[UIFont systemFontOfSize:12.0f]];
+    cellLabel.text = [_sampleNamesArray[indexPath.row] substringWithRange:NSMakeRange(0, [_sampleNamesArray[indexPath.row] rangeOfString: @"."].location)];
+    cellLabel.textColor = [UIColor blackColor];
+    cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    cell.layer.borderWidth = 0.4f;
+    cell.layer.cornerRadius = 2.0f;
+    RRSampleAddButton *addButton = [[RRSampleAddButton alloc] initWithFrame:CGRectMake(285, 15, 25, 25) andSampleName:_sampleNamesArray[indexPath.row]];
+    addButton.backgroundColor = [UIColor lightGrayColor];
+    addButton.layer.borderWidth = 0.7f;
+    addButton.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    addButton.layer.cornerRadius = 12.5f;
+    [addButton setTitle:@"+" forState:UIControlStateNormal];
+    [addButton addTarget:self action:@selector(addSample:) forControlEvents:UIControlEventTouchUpInside];
+    [[cell contentView] addSubview:addButton];
+    // RRSampleListDeleteButton *deleteButton = [[RRSampleListDeleteButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    // deleteButton.index = indexPath.row;
+    //[deleteButton addTarget:self action:@selector(removeSample:) forControlEvents:UIControlEventTouchUpInside];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //[[cell contentView] addSubview:deleteButton];
+    [[cell contentView] addSubview:cellLabel];
+    [[cell contentView] addSubview:playButton];
+    return cell;
+}
+
 
 -(void) save
 {
@@ -70,7 +163,7 @@
         [sampleList addObject:s];
         
         //NSDictionary dictionary = [s dictionary];
-        BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
+       // BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
         
     }
     
@@ -175,7 +268,7 @@
 	[self.view addSubview:self.toolbar];
     [self initPropertiesWithBaseValues];
     
-    _sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
+    //_sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
     
     _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     _animationButton.frame = CGRectMake(0, 0, 1, self.view.frame.size.width - 44);
@@ -198,7 +291,7 @@
 {
     RRSample* currentSample = (RRSample*) sender;
     
-    int separator = 42;
+    int separator = 30;
     int y = currentSample.center.y;
     int channel = 0;
     
@@ -286,7 +379,7 @@
     for(RRSample *object in _eventList)
     {
         if(!object.triggered
-           && (_animationButton.frame.origin.x >= object.frame.origin.x - 1)
+           && (_animationButton.frame.origin.x >= object.frame.origin.x)
            && (_animationButton.frame.origin.x < object.frame.origin.x + object.frame.size.width))
         {
                 [_trackArray[object.trackId] startPlaying:object.sampleName numberOfLoops:1 volumeLevel:0.8];
@@ -336,37 +429,17 @@
     [_trackArray insertObject:player atIndex:[_trackArray count]];
 }
 
--(void)addTrack
+-(void)addSample:(id)sender
 {
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav" andSampleURL:@""];
-    auxButton.trackId = 1;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
-}
-
--(void)addTrack1
-{
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
-    auxButton.trackId = 0;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
-}
-
--(void)addSample
-{
-    RRSample *newSample = [[RRSample alloc]initWithSampleName:@"SampleName" andSampleURL:@""];
+    RRSampleAddButton *addBtn = (RRSampleAddButton *)sender;
+    RRSample *newSample = [[RRSample alloc]initWithSampleName:addBtn.sampleName andSampleURL:@""];
     newSample.trackId = 3;
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
     [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:newSample];
     [_eventList insertObject:newSample atIndex:[_eventList count]];
+    _sampleListView.hidden = YES;
 }
 
 -(void)stop

@@ -18,5 +18,6 @@
 }
 
 @property(strong,nonatomic) AVAudioPlayer *audioPlayer;
+- (void)uploadSample;//:(NSString *)sampleName;
 
 @end

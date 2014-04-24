@@ -52,8 +52,19 @@
     [_editorViewButton setTitle:@"Editor" forState:normal];
     [_editorViewButton addTarget:self action:@selector(goToEditorView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_editorViewButton];
+    
+    RRButton *upload = [[RRButton alloc] initWithFrame:CGRectMake(X_Co, 390, 240, 40)];
+    [upload setTitle:@"upload" forState:normal];
+    [upload addTarget:self action:@selector(uploadSample1) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:upload];
+
 }
 
+-(void) uploadSample1
+{
+    RecordingViewController *rc = [[RecordingViewController alloc] init];
+    [rc uploadSample];
+}
 - (BOOL)prefersStatusBarHidden {return YES;}
 
 - (void) viewWillAppear:(BOOL)animated

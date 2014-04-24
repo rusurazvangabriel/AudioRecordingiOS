@@ -10,7 +10,9 @@
 #import "SampleListViewController.h"
 #import "AFNetworking.h"
 #import "AudioPlayer.h"
-
+#import "AFHTTPRequestOperationManager.h"
+#import "AFHTTPSessionManager.h"
+#import "RRAFJSONRequestSerializer.h"
 @interface RecordingViewController ()
 
 @property BOOL flag;
@@ -123,8 +125,13 @@ static int sampleIndex;
     [_restartRecording addTarget:self action:@selector(recordAgainButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     _restartRecording.hidden = YES;
     //[self downloadSample];
-    [_player downloadSample:@"http://app.etajul9.ro/sounds/bass.wav"];
-    [_player downloadSample:@"http://app.etajul9.ro/sounds/drums.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepSynth1.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepSynth2.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepBass1.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepBass2.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepDrums1.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepDrums2.wav"];
+    [_player downloadSample:@"http://app.etajul9.ro/sounds/standard_samples/DubstepDrums3.wav"];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -142,6 +149,7 @@ static int sampleIndex;
     _saveButton.hidden = YES;
     _restartRecording.hidden = YES;
     _fileNameTextField.hidden = YES;
+     //[self uploadSample];
 }
 
 - (void) recordButtonPressed
@@ -178,7 +186,6 @@ static int sampleIndex;
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Button Index =%ld",buttonIndex);
     if (buttonIndex == 1) {  //SaveLogin
         UITextField *sampleName = [alertView textFieldAtIndex:0];
         
@@ -188,7 +195,6 @@ static int sampleIndex;
             
             NSString *tempSampleName = [NSString stringWithFormat:@"%@.caf",sampleName.text];
             NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
-            
             NSError * err = NULL;
             NSFileManager * fm = [[NSFileManager alloc] init];
             
@@ -235,40 +241,89 @@ static int sampleIndex;
     [super viewWillAppear:animated];
     objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationPortrait);
 }
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self recordAgainButtonPressed];
+    
 }
-//        NSData *file1Data = [[NSData alloc] initWithContentsOfFile:[docPath stringByAppendingString:sampleName]];
-//        NSString *urlString = @"http://app.etajul9.ro/mysql_query1.php";
-//
-//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-//        [request setURL:[NSURL URLWithString:urlString]];
-//        [request setHTTPMethod:@"POST"];
-//
-//        NSString *boundary = @"---------------------------14737809831466499882746641449";
-//        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-//        [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-//
-//        NSMutableData *body = [NSMutableData data];
-//        [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//
-//        [body appendData:[[NSString stringWithString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"userfile\"; filename=\"%@\"\r\n",sampleName]] dataUsingEncoding:NSUTF8StringEncoding]];
-//
-//        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-//        [body appendData:[NSData dataWithData:file1Data]];
-//        [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-//
-//        [request setHTTPBody:body];
-//
-//        NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-//        NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
-//
-//        NSLog(@"Return String= %@",returnString);
 
-- (void)uploadFile
+- (void)uploadSample//:(NSString *)sampleName
 {
+    NSLog(@"upload");
+    
+    NSString *baseurl = @"http://app.etajul9.ro/api/add_sample.php";
+    NSURL *dataURL = [NSURL URLWithString:baseurl];
+    
+    NSMutableURLRequest *dataRqst = [NSMutableURLRequest requestWithURL:dataURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
+    
+    [dataRqst setHTTPMethod:@"POST"];
+    
+    NSString *stringBoundary = @"----WebKitFormBoundaryEty8uPcNQAYEKwtR";
+    NSString *headerBoundary = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",stringBoundary];
+    
+    [dataRqst addValue:headerBoundary forHTTPHeaderField:@"Content-Type"];
+    
+    NSMutableData *postBody = [NSMutableData data];
+    
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Disposition: form-data; name=\"token\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"673d0fefbee71ca8875ff3b5ac26f98011ade255\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+
+    [postBody appendData:[[NSString stringWithFormat:@"--%@\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Disposition: form-data; name=\"userfile\"; filename=\"drums.wav\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Type: audio/wav\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"Content-Transfer-Encoding: binary\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    //*******************load locally store audio file********************//
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *audioUrl = [NSString stringWithFormat:@"%@/drums.wav", documentsDirectory];
+//    
+//    // get the audio data from main bundle directly into NSData object
+    NSData *audioData;
+    audioData = [[NSData alloc] initWithContentsOfFile:audioUrl];
+    // add it to body
+    [postBody appendData:audioData];
+    [postBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    // final boundary
+    
+    [postBody appendData:[[NSString stringWithFormat:@"%--@--\r\n", stringBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // add body to post
+    NSString *str = [[NSString alloc] initWithData:postBody encoding:NSASCIIStringEncoding];
+    NSLog(@"\n\n%@\n\n",str);
+    [dataRqst setHTTPBody:postBody];
+    
+    //NSHTTPURLResponse* response =[[NSHTTPURLResponse alloc] init];
+   // NSError* error = [[NSError alloc] init] ;
+    
+    //synchronous filling of data from HTTP POST response
+    //NSData *responseData = [NSURLConnection sendSynchronousRequest:dataRqst returningResponse:&response error:&error];
+    [NSURLConnection sendAsynchronousRequest:dataRqst queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSLog(@"A mers %@",response.description);
+    }];
+    
+    
+    //convert data into string
+    //NSString *responseString = [[NSString alloc] initWithBytes:[responseData bytes] length:[responseData length] encoding:NSUTF8StringEncoding];
+    
+    //NSLog(@"Response String %@",responseString);
+
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    manager.requestSerializer = [RRAFJSONRequestSerializer serializer];
+//    manager.securityPolicy.allowInvalidCertificates = YES;
+//    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+//    
+//    NSDictionary *parameters = @{@"token": @"673d0fefbee71ca8875ff3b5ac26f98011ade255"};
+//    [manager POST:@"http://app.etajul9.ro/api/add_sample.php" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+//        [formData appendPartWithFormData:audioData name:@"userfile"];
+//    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"Success: %@", responseObject);
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//    }];
     
 }
 
@@ -280,3 +335,4 @@ static int sampleIndex;
 
 
 @end
+
