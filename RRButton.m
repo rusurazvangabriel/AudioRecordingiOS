@@ -23,6 +23,19 @@
         self.layer.shadowOffset = CGSizeMake(2.0f, 3.0f);
         self.layer.shadowOpacity = 0.8f;
         self.layer.masksToBounds = NO;
+        
+        CAGradientLayer *layer = [CAGradientLayer layer];
+        NSArray *colors = [NSArray arrayWithObjects:
+                           (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
+                           (id)[UIColor colorWithRed:61/255.0f green:97/255.0f blue:211/255.0f alpha:1.0f],
+                           (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
+                           nil];
+        [layer setColors:colors];
+        [layer setFrame:self.bounds];
+        [self.layer insertSublayer:layer atIndex:0];
+        self.clipsToBounds = YES; // Important!
+
+        
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     return self;

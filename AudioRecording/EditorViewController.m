@@ -9,14 +9,21 @@
 #import "EditorViewController.h"
 #import "AudioPlayer.h"
 #import "MainViewController.h"
+#import "RRSampleListPlayButton.h"
 
 #import "VBProjectState.h"
 #import "VBSampleForSerialization.h"
 
-@interface EditorViewController () //<UITableViewDataSource,UITableViewDelegate>
+#import "EditorSampleListViewController.h"
+#import "UIViewController+MJPopupViewController.h"
+#import "RRTableViewCell.h"
+#import "RRSampleAddButton.h"
+
+@interface EditorViewController () <UITableViewDataSource,UITableViewDelegate>
+
+@property(strong, nonatomic) NSMutableArray *sampleNamesArray;
 
 @property(strong,nonatomic) NSMutableArray *trackArray;
-@property(strong,nonatomic) NSMutableArray *sampleNameArray;
 @property(strong,nonatomic) NSMutableArray *checkboxArray;
 
 @property (nonatomic, strong) UIToolbar	*toolbar;
@@ -28,6 +35,10 @@
 @property (strong, nonatomic) NSMutableArray *eventList;
 @property (strong,nonatomic) NSMutableArray *currentlyPausedPlayers;
 
+@property (assign,nonatomic) int index;
+
+@property (strong, nonatomic) UIView *sampleListView;
+@property (strong, nonatomic) UITableView *sampleListTableView;
 @end
 
 @implementation EditorViewController
@@ -47,13 +58,78 @@
     
     UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
     UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
-    UIBarButtonItem *addTrackItem = [self createBarButtonWithTitle:@"AddB" andDelegate:@selector(addTrack)];
-    UIBarButtonItem *addTrackItem1 = [self createBarButtonWithTitle:@"AddD" andDelegate:@selector(addTrack1)];
     UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
     UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
-    
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5, addTrackItem,addTrackItem1] animated:NO];
+    UIBarButtonItem *customItem6 = [self createBarButtonWithTitle:@"+" andDelegate:@selector(add)];
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6] animated:NO];
 }
+
+-(void)add
+{
+    _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
+    NSLog(@"w:%f,h:%f",self.view.frame.size.width,self.view.frame.size.height);
+    
+    if(_sampleListView == nil)
+    {
+    _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.3f];
+    float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
+    _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
+    _sampleListTableView.backgroundColor = [UIColor whiteColor];
+    _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    _sampleListTableView.layer.borderWidth = 1.0f;
+    _sampleListTableView.layer.cornerRadius = 10.0f;
+    _sampleListTableView.delegate = self;
+    _sampleListTableView.dataSource = self;
+    [_sampleListView addSubview:_sampleListTableView];
+    [self.view addSubview:_sampleListView];
+    }
+    else
+    {
+        [self.view bringSubviewToFront:_sampleListView];
+        _sampleListView.hidden = NO;
+    }
+};
+
+-(NSArray *)listFileAtPath
+{
+    //-----> LIST ALL FILES <-----//
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0] error:NULL];
+    return directoryContent;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    //returns number of rows
+    return [_sampleNamesArray count] - 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    //returns number of samples
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 50;
+}
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* cellIdentifier = @"Cell";
+    RRTableViewCell *cell = [[RRTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault andSampleName:_sampleNamesArray[indexPath.row] reuseIdentifier:cellIdentifier];
+    RRSampleAddButton *addButton = [[RRSampleAddButton alloc] initWithFrame:CGRectMake(285, 15, 25, 25) andSampleName:_sampleNamesArray[indexPath.row]];
+    addButton.backgroundColor = [UIColor lightGrayColor];
+    addButton.layer.borderWidth = 0.7f;
+    addButton.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    addButton.layer.cornerRadius = 12.5f;
+    [addButton setTitle:@"+" forState:UIControlStateNormal];
+    [addButton addTarget:self action:@selector(addSample:) forControlEvents:UIControlEventTouchUpInside];
+    [[cell contentView] addSubview:addButton];
+    return cell;
+}
+
 
 -(void) save
 {
@@ -61,7 +137,7 @@
     NSMutableArray* sampleList = [[NSMutableArray alloc] init];
     for (RRSample* sample in _eventList){
         VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
-                                      // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
+        // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
         
 #warning halp
         //s.url = sample.sampleURL;
@@ -70,7 +146,7 @@
         [sampleList addObject:s];
         
         //NSDictionary dictionary = [s dictionary];
-        BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
+        // BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
         
     }
     
@@ -87,9 +163,9 @@
 {
     NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
-                                                                      style:UIBarButtonItemStyleBordered
-                                                                     target:self
-                                                                     action:delegate];
+                                                                  style:UIBarButtonItemStyleBordered
+                                                                 target:self
+                                                                 action:delegate];
     [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
     return barButton;
 }
@@ -175,16 +251,18 @@
 	[self.view addSubview:self.toolbar];
     [self initPropertiesWithBaseValues];
     
-    _sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
+    //_sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
     
     _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _animationButton.frame = CGRectMake(0, 0, 1, self.view.frame.size.width - 44);
-    [_animationButton setBackgroundColor:[UIColor blackColor]];
+    _animationButton.frame = CGRectMake(40, 0, 1, self.view.frame.size.width - 44);
+    [_animationButton setBackgroundColor:[UIColor blueColor]];
     _animationButton.layer.masksToBounds = YES;
-    _animationButton.layer.borderColor = [UIColor blackColor].CGColor;
+    _animationButton.layer.borderColor = [UIColor blueColor].CGColor;
     _animationButton.layer.borderWidth = 1;
     [self.view addSubview:_animationButton];
     [self.view bringSubviewToFront:_animationButton];
+    
+    _index = 0;
     
     [self addChannel];
     [self addChannel];
@@ -198,18 +276,21 @@
 {
     RRSample* currentSample = (RRSample*) sender;
     
-    int separator = 42;
+    int separator = 40;
     int y = currentSample.center.y;
     int channel = 0;
     
     for (int i = 0; i < 6; i++){
-        if (y < 30 +  (i)*separator + separator/2) {
+        if (y < 40 +  (i)*separator + separator/2) {
             channel = i;
             break;
         }
     }
+    
+    
+    
     CGRect frame = currentSample.frame;
-    frame.origin.y = 30 + channel*separator - separator/2; // o sa fie rezolvata si asta
+    frame.origin.y = channel * 40 ; //30 + channel*separator - separator/2; // o sa fie rezolvata si asta
     currentSample.frame = frame;
     currentSample.trackId = channel;
     
@@ -226,7 +307,7 @@
 
 -(int) getClosestSampleHorizontalCoordonate:(RRSample*) currentSample
 {
-    int vecinity = 20;
+    int vecinity = 50;
     int minDistance = 9999;
     RRSample* buttonToSnapTo;
     for (RRSample *button in _eventList)
@@ -234,15 +315,25 @@
         if (button != currentSample) {
             int distance = currentSample.frame.origin.x - (button.frame.origin.x + button.frame.size.width);
             if(abs(distance) < vecinity && distance < minDistance && currentSample.trackId == button.trackId){
-                    minDistance = distance;
-                    buttonToSnapTo = button;
+                minDistance = distance;
+                buttonToSnapTo = button;
             }
         }
     }
     if (buttonToSnapTo != NULL) {
         return buttonToSnapTo.frame.origin.x + buttonToSnapTo.frame.size.width;
     }
-    return 9999;
+    else
+    {
+        for(RRSample *sample in _eventList)
+        {
+            if(currentSample.trackId == sample.trackId && ![currentSample isEqual:sample])
+            {
+                return 9999;
+            }
+        }
+        return 40;
+    }
 }
 
 -(void)initPropertiesWithBaseValues
@@ -286,11 +377,11 @@
     for(RRSample *object in _eventList)
     {
         if(!object.triggered
-           && (_animationButton.frame.origin.x >= object.frame.origin.x - 1)
+           && (_animationButton.frame.origin.x >= object.frame.origin.x)
            && (_animationButton.frame.origin.x < object.frame.origin.x + object.frame.size.width))
         {
-                [_trackArray[object.trackId] startPlaying:object.sampleName numberOfLoops:1 volumeLevel:0.8];
-                object.triggered = YES;
+            [_trackArray[object.trackId] startPlaying:object.sampleName numberOfLoops:1 volumeLevel:0.8];
+            object.triggered = YES;
         }
         else if(_animationButton.frame.origin.x > object.frame.origin.x + object.frame.size.width)
         {
@@ -313,14 +404,32 @@
 {
     RRSample *aux = (RRSample *)sender;
     aux.triggered = NO;
-    UIControl *control = sender;
-    UITouch *t = [[event allTouches] anyObject];
-    CGPoint pPrev = [t previousLocationInView:control];
-    CGPoint p = [t locationInView:control];
-    CGPoint center = control.center;
-    center.x += p.x - pPrev.x;
-    center.y += p.y - pPrev.y;
-    control.center = center;
+    
+    NSLog(@"%f",self.view.frame.size.height);
+    
+    if(aux.frame.origin.y + aux.frame.size.height >= self.view.frame.size.height)
+    {
+        [aux removeFromSuperview];
+        for(RRSample *item in _eventList) {
+            if([item isEqual:aux]){
+                [_eventList removeObject:aux];
+                break;
+            }
+        }
+        return;
+    }
+    else
+    {
+        
+        UIControl *control = sender;
+        UITouch *t = [[event allTouches] anyObject];
+        CGPoint pPrev = [t previousLocationInView:control];
+        CGPoint p = [t locationInView:control];
+        CGPoint center = control.center;
+        center.x += p.x - pPrev.x;
+        center.y += p.y - pPrev.y;
+        control.center = center;
+    }
 }
 
 -(void)goToMainView
@@ -332,46 +441,33 @@
 
 -(void)addChannel
 {
+    UIView *channelView = [[UIView alloc] initWithFrame:CGRectMake(0, _index * 40, self.view.frame.size.height, 40)];
+    channelView.layer.borderWidth = 0.3f;
+    channelView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    [self.view addSubview:channelView];
+    _index++;
     AudioPlayer *player = [[AudioPlayer alloc] init];
     [_trackArray insertObject:player atIndex:[_trackArray count]];
 }
 
--(void)addTrack
+-(void)addSample:(id)sender
 {
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"bass.wav" andSampleURL:@""];
-    auxButton.trackId = 1;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
-}
-
--(void)addTrack1
-{
-    RRSample *auxButton = [[RRSample alloc]initWithSampleName:@"drums.wav" andSampleURL:@""];
-    auxButton.trackId = 0;
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [auxButton addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [auxButton addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:auxButton];
-    [_eventList insertObject:auxButton atIndex:[_eventList count]];
-}
-
--(void)addSample
-{
-    RRSample *newSample = [[RRSample alloc]initWithSampleName:@"SampleName" andSampleURL:@""];
+    RRSampleAddButton *addBtn = (RRSampleAddButton *)sender;
+    RRSample *newSample = [[RRSample alloc]initWithSampleName:addBtn.sampleName andSampleURL:@""];
     newSample.trackId = 3;
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
     [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:newSample];
     [_eventList insertObject:newSample atIndex:[_eventList count]];
+    _sampleListView.hidden = YES;
+    [self.view bringSubviewToFront:_animationButton];
 }
 
 -(void)stop
 {
-    _animationButton.center = CGPointMake(1, _animationButton.center.y);
+    _animationButton.center = CGPointMake(40, _animationButton.center.y);
+    [self.view bringSubviewToFront:_animationButton];
     _start = NO;
     for(AudioPlayer *player in _trackArray)
     {
