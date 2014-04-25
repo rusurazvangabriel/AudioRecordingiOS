@@ -13,11 +13,13 @@ AudioPlayer *ap;
 
 @implementation RRSampleListPlayButton
 
-- (id)init1
+-(id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:CGRectMake(3, 3, 40, 40)];
+    self = [super initWithFrame:CGRectMake(5, 10, 30, 30)];
     if (self) {
-        [self setBackgroundImage:[UIImage imageNamed:@"playSample.png"] forState:UIControlStateNormal];
+        [self setTitle:@"P" forState:UIControlStateNormal];
+        self.backgroundColor = [UIColor blackColor];
+        self.layer.cornerRadius = 5.0f;
         [self addTarget:self action:@selector(playSample) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;

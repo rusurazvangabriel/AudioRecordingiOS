@@ -12,7 +12,7 @@
 
 - (id)initWithSampleName:(NSString *)name andSampleURL:(NSString *)url
 {
-    self = [super initWithFrame:CGRectMake(100, 100, [self getSampleLengthForSamplename:name] * 10, 30)];
+    self = [super initWithFrame:CGRectMake(100, 100, [self getSampleLengthForSamplename:name] * 10, 40)];
     if (self) {
         self.triggered = NO;
         self.sampleName = name;
