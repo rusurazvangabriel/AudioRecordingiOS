@@ -59,7 +59,7 @@
     UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
     UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
     UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
-    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
+    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(saveProject)];
     UIBarButtonItem *customItem6 = [self createBarButtonWithTitle:@"+" andDelegate:@selector(add)];
     [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6] animated:NO];
 }
@@ -131,30 +131,46 @@
 }
 
 
--(void) save
+/* 
+ Am lasat 'BOOL ceva' alea ca sa vezi daca se pot sau nu serializa alea
+ In mod normal nu e nevoie de ele.
+ */
+-(void) saveProject
 {
     NSLog(@"SAVE");
     NSMutableArray* sampleList = [[NSMutableArray alloc] init];
     for (RRSample* sample in _eventList){
-        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
-        // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
-        
-#warning halp
-        //s.url = sample.sampleURL;
-        s.channel = sample.trackId;
-        s.xvalue = sample.frame.origin.x;
-        [sampleList addObject:s];
-        
-        //NSDictionary dictionary = [s dictionary];
-        // BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
-        
+        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] initWithUrl:sample.sampleName andChannel:sample.trackId andPosition:sample.frame.origin.x];
+        BOOL ceva = [NSJSONSerialization isValidJSONObject:[s dictionary]];
+        [sampleList addObject:[s dictionary]];
     }
     
-    //VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
-    //BOOL ceva = [NSJSONSerialization isValidJSONObject:project];
-    //NSData* data = [NSJSONSerialization dataWithJSONObject:project options:(0) error:nil];
+    VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
+    BOOL ceva = [NSJSONSerialization isValidJSONObject:[project dictionary]];
+    NSData* data = [NSJSONSerialization dataWithJSONObject:[project dictionary] options:(0) error:nil];
     
-    NSLog(@"STOP!!");
+    
+    // asta e pus de test aici, sa vad ca imi deserializeaza calumea chestia serializata
+    [self loadProjectFromNSData:data];
+    
+}
+
+/*
+ E cam intuitiv ce trebuie facut.. la saveProject NSData-ul ala trebuie salvat intr-un file ceva, iar cand dai load si il alegi sa se apeleze asta de mai jos cu NSData-ul ala. Asta iti da project
+ */
+-(void) loadProjectFromNSData: (NSData *) data
+{
+    VBProjectState* project = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+    for (VBSampleForSerialization* sample in project.sampleList){
+        /* se adauga sample-ul cu numele 'name' pe canalul 'channel' la pozitia 'xvalue'.
+        sample.name
+        sample.xvalue
+        sample.channel
+        */
+        
+        // IMPORTANT ar fi ok sa se apeleze saveProject intr-un NSData global sau ceva de genul atunci cand te muti din ecranul asta in altul ca mai apoi sa se apeleze loadProject cand te intorci in editor, ca sa nu pierzi informatia.
+    }
+    NSLog(@"pam pam");
     
 }
 

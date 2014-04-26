@@ -10,6 +10,8 @@
 
 @interface VBProjectState : NSObject
 
+@property(strong,nonatomic) NSArray* sampleList;
+
 -(VBProjectState*) initWithSampleList: (NSArray*) sl;
 
 -(NSDictionary*)dictionary;

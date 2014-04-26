@@ -12,12 +12,10 @@
 
 /*
 
+ // eventual o sa folosim si asta, nu?
 @property(strong, nonatomic) NSString* name;
 
-@property(nonatomic) int tempo;
 */
-
-@property(strong,nonatomic) NSArray* sampleList;
 
 @end
 
@@ -31,8 +29,14 @@
     return self;
 }
 
+-(NSArray*) getSampleList
+{
+    return self.sampleList;
+}
+
 -(NSDictionary*)dictionary {
-    return [NSDictionary dictionaryWithObjectsAndKeys:self.sampleList, @"sampleList", nil];
+    NSDictionary *dictonary = [NSDictionary dictionaryWithObjectsAndKeys:self.sampleList, @"sampleList", nil];
+    return dictonary;
 }
 
 @end
