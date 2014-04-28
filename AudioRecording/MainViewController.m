@@ -26,7 +26,7 @@
 {
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"backgroundMain.jpg"]];
     
     _editor = [[EditorViewController alloc] init];
     _sampleList = [[SampleListViewController alloc]init];
@@ -52,9 +52,39 @@
     [_editorViewButton setTitle:@"Editor" forState:normal];
     [_editorViewButton addTarget:self action:@selector(goToEditorView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_editorViewButton];
+    
+//    RRButton *upload = [[RRButton alloc] initWithFrame:CGRectMake(X_Co, 390, 240, 40)];
+//    [upload setTitle:@"upload" forState:normal];
+//    [upload addTarget:self action:@selector(uploadSample1) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:upload];
+
 }
 
-- (BOOL)prefersStatusBarHidden {return YES;}
+//-(void) uploadSample1
+//{
+//    RecordingViewController *rc = [[RecordingViewController alloc] init];
+//    [rc uploadSample];
+//}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if ( ! UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationPortrait duration:duration];;
+    }else
+        
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationPortrait duration:duration];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 - (void) viewWillAppear:(BOOL)animated
 {

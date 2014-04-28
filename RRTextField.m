@@ -15,6 +15,7 @@
     self = [super initWithFrame:CGRectMake(x, y, 240, 35)];
     if (self) {
         self.layer.sublayerTransform = CATransform3DMakeTranslation(10, 0, 0);
+        self.backgroundColor = [UIColor whiteColor];
         self.layer.borderColor = [UIColor blackColor].CGColor;
         self.layer.borderWidth = 0.6f;
         self.keyboardType = UIKeyboardTypeDefault;

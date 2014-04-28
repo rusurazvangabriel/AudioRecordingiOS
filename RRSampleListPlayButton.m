@@ -13,11 +13,13 @@ AudioPlayer *ap;
 
 @implementation RRSampleListPlayButton
 
-- (id)init1
+-(id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:CGRectMake(3, 3, 40, 40)];
+    self = [super initWithFrame:CGRectMake(5, 10, 30, 30)];
     if (self) {
-        [self setBackgroundImage:[UIImage imageNamed:@"playSample.png"] forState:UIControlStateNormal];
+        [self setTitle:@"P" forState:UIControlStateNormal];
+        self.backgroundColor = [UIColor blackColor];
+        self.layer.cornerRadius = 5.0f;
         [self addTarget:self action:@selector(playSample) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
@@ -26,9 +28,16 @@ AudioPlayer *ap;
 - (void)playSample
 {
     ap = [[AudioPlayer alloc] init];
-    [ap downloadSample:self.sampleUrl];
-    [ap startPlaying:self.sampleHash numberOfLoops:1 volumeLevel:1.0f];
+    //[ap downloadSample:self.sampleUrl];
+    [ap startPlaying:self.sampleName numberOfLoops:1 volumeLevel:1.0f];
 }
+
+- (void)stopSample
+{
+    ap = [[AudioPlayer alloc] init];
+    [ap stopPlaying];
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

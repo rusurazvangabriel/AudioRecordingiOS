@@ -45,7 +45,7 @@
     _mainView = [[MainViewController alloc] init];
     _registerView = [[SignUpViewController alloc] init];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background2.jpg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"backgroundMain.jpg"]];
     
     float X_Co = (self.view.frame.size.width - 240)/2;
     float X_Image = (self.view.frame.size.width - 148)/2;
@@ -88,7 +88,7 @@
     
     _signUpButton = [[RRButton alloc] initWithFrame:CGRectMake(X_Co, 460, 240, 40)];
     [_signUpButton setTitle:@"Sign Up" forState:normal];
-    _signUpButton.backgroundColor = [UIColor colorWithRed:0/255.0f green:169/255.0f blue:4/255.0f alpha:1.0f];
+    _signUpButton.backgroundColor = [UIColor colorWithRed:61/255.0f green:200/255.0f blue:211/255.0f alpha:1.0f];
     [_signUpButton addTarget:self action:@selector(goToSignUpView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_signUpButton];
     

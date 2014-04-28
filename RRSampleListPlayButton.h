@@ -13,5 +13,5 @@
 @property(nonatomic,strong) NSString *sampleName;
 @property(nonatomic,strong) NSString *sampleUrl;
 @property(nonatomic,strong) NSString *sampleHash;
-- (id)init1;
+- (void)stopSample;
 @end

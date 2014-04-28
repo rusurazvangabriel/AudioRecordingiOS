@@ -16,7 +16,8 @@
 @property (nonatomic,assign) int trackId;
 
 @property (nonatomic,assign) BOOL triggered;
-
+@property (assign, nonatomic) UIColor *color;
 - (id)initWithSampleName:(NSString *)name andSampleURL:(NSString *)url;
+- (id)initWithSampleName:(NSString *)name andSampleURL:(NSString *)url andChannel:(int) ch andX:(float)x;
 
 @end
