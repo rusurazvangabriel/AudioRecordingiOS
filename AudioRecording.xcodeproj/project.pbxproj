@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		57B301F718F9A42B0002495C /* VBProjectState.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B301F618F9A42B0002495C /* VBProjectState.m */; };
 		57B301FA18F9A5B80002495C /* VBSampleForSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B301F918F9A5B80002495C /* VBSampleForSerialization.m */; };
-		8C0049561909118C00647A26 /* MJPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0049531909118C00647A26 /* MJPopupBackgroundView.m */; };
-		8C0049571909118C00647A26 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0049551909118C00647A26 /* UIViewController+MJPopupViewController.m */; };
 		8C00495E1909372200647A26 /* RRSampleAddButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C00495D1909372200647A26 /* RRSampleAddButton.m */; };
+		8C02BC3E190E4CE200F563DD /* backgroundMain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C02BC3D190E4CE200F563DD /* backgroundMain.jpg */; };
+		8C02BC40190E4EEF00F563DD /* editorBackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C02BC3F190E4EEF00F563DD /* editorBackground.jpg */; };
+		8C02BC42190E527E00F563DD /* mixerBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C02BC41190E527E00F563DD /* mixerBackground.png */; };
 		8C03E4DC18EEB01700117D48 /* RRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C03E4DB18EEB01700117D48 /* RRTableViewCell.m */; };
 		8C03E4DE18EEBFF900117D48 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C03E4DD18EEBFF900117D48 /* play.png */; };
 		8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A8FD818E2CC1200C7C815 /* RecordingViewController.m */; };
@@ -96,12 +97,11 @@
 		57B301F618F9A42B0002495C /* VBProjectState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBProjectState.m; sourceTree = "<group>"; };
 		57B301F818F9A5B80002495C /* VBSampleForSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBSampleForSerialization.h; sourceTree = "<group>"; };
 		57B301F918F9A5B80002495C /* VBSampleForSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VBSampleForSerialization.m; sourceTree = "<group>"; };
-		8C0049521909118C00647A26 /* MJPopupBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPopupBackgroundView.h; sourceTree = "<group>"; };
-		8C0049531909118C00647A26 /* MJPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPopupBackgroundView.m; sourceTree = "<group>"; };
-		8C0049541909118C00647A26 /* UIViewController+MJPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+MJPopupViewController.h"; sourceTree = "<group>"; };
-		8C0049551909118C00647A26 /* UIViewController+MJPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MJPopupViewController.m"; sourceTree = "<group>"; };
 		8C00495C1909372200647A26 /* RRSampleAddButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSampleAddButton.h; sourceTree = "<group>"; };
 		8C00495D1909372200647A26 /* RRSampleAddButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSampleAddButton.m; sourceTree = "<group>"; };
+		8C02BC3D190E4CE200F563DD /* backgroundMain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = backgroundMain.jpg; sourceTree = "<group>"; };
+		8C02BC3F190E4EEF00F563DD /* editorBackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = editorBackground.jpg; sourceTree = "<group>"; };
+		8C02BC41190E527E00F563DD /* mixerBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mixerBackground.png; sourceTree = "<group>"; };
 		8C03E4DA18EEB01700117D48 /* RRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRTableViewCell.h; sourceTree = "<group>"; };
 		8C03E4DB18EEB01700117D48 /* RRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRTableViewCell.m; sourceTree = "<group>"; };
 		8C03E4DD18EEBFF900117D48 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
@@ -273,17 +273,6 @@
 			name = ServerMethods;
 			sourceTree = "<group>";
 		};
-		8C0049511909117600647A26 /* MJPopup */ = {
-			isa = PBXGroup;
-			children = (
-				8C0049521909118C00647A26 /* MJPopupBackgroundView.h */,
-				8C0049531909118C00647A26 /* MJPopupBackgroundView.m */,
-				8C0049541909118C00647A26 /* UIViewController+MJPopupViewController.h */,
-				8C0049551909118C00647A26 /* UIViewController+MJPopupViewController.m */,
-			);
-			name = MJPopup;
-			sourceTree = "<group>";
-		};
 		8C03E4D918EEAFED00117D48 /* CustomTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +285,9 @@
 		8C0A8FEC18E2FB8F00C7C815 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8C02BC41190E527E00F563DD /* mixerBackground.png */,
+				8C02BC3F190E4EEF00F563DD /* editorBackground.jpg */,
+				8C02BC3D190E4CE200F563DD /* backgroundMain.jpg */,
 				8C5737F718F59BBB00BA8DA7 /* delete.png */,
 				8CF6FFC618EC61A00099CF95 /* Buttons */,
 				8CF6FFC518EC61800099CF95 /* Backgrounds */,
@@ -350,7 +342,6 @@
 		8CDE7BB218D0C21C0082FE17 /* AudioRecording */ = {
 			isa = PBXGroup;
 			children = (
-				8C0049511909117600647A26 /* MJPopup */,
 				8C00495019090A4000647A26 /* ServerMethods */,
 				57B301FB18F9C6A10002495C /* ViewControllers */,
 				57B301F418F9A3FC0002495C /* ProjectState */,
@@ -615,8 +606,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C02BC42190E527E00F563DD /* mixerBackground.png in Resources */,
 				8C0A8FE918E2FB8400C7C815 /* Play-Pressed-icon.png in Resources */,
 				8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */,
+				8C02BC40190E4EEF00F563DD /* editorBackground.jpg in Resources */,
 				8CF6FFCA18EC61EC0099CF95 /* uncheckedCheckbox.png in Resources */,
 				8C0C3D0D18E9ADA7006C0748 /* button_play_green.png in Resources */,
 				8CDE7BC518D0C21C0082FE17 /* Images.xcassets in Resources */,
@@ -635,6 +628,7 @@
 				8C0A8FEB18E2FB8400C7C815 /* Play-Disabled-icon.png in Resources */,
 				8CDE7BC018D0C21C0082FE17 /* Main.storyboard in Resources */,
 				8C0A8FE818E2FB8400C7C815 /* Stop-Normal-Red-icon.png in Resources */,
+				8C02BC3E190E4CE200F563DD /* backgroundMain.jpg in Resources */,
 				8C0A8FEA18E2FB8400C7C815 /* Stop-Pressed-Blue-icon.png in Resources */,
 				8C0A8FE318E2EBEE00C7C815 /* navbar.png in Resources */,
 			);
@@ -664,7 +658,6 @@
 				8CDE7BE518D0CCB30082FE17 /* AudioPlayerViewController.m in Sources */,
 				8CE71ED518E58AD500E40CBD /* AFNetworkReachabilityManager.m in Sources */,
 				8CE71EDB18E58AD500E40CBD /* AFNetworkActivityIndicatorManager.m in Sources */,
-				8C0049561909118C00647A26 /* MJPopupBackgroundView.m in Sources */,
 				8C46B20F18FEE38D008EA7D5 /* RRAFJSONRequestSerializer.m in Sources */,
 				8C0A8FD918E2CC1200C7C815 /* RecordingViewController.m in Sources */,
 				8C03E4DC18EEB01700117D48 /* RRTableViewCell.m in Sources */,
@@ -677,7 +670,6 @@
 				8CF9FA9318F6D78E00F99029 /* DownloadedSamples.m in Sources */,
 				8C0F5CFC18D9A4B0007A6599 /* SampleListViewController.m in Sources */,
 				8CE71EDE18E58AD500E40CBD /* UIButton+AFNetworking.m in Sources */,
-				8C0049571909118C00647A26 /* UIViewController+MJPopupViewController.m in Sources */,
 				57B301F718F9A42B0002495C /* VBProjectState.m in Sources */,
 				57B301FA18F9A5B80002495C /* VBSampleForSerialization.m in Sources */,
 				8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */,

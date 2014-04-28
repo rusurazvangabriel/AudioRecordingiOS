@@ -27,7 +27,7 @@
 @property(strong,nonatomic) NSMutableArray *checkboxArray;
 
 @property (nonatomic, strong) UIToolbar	*toolbar;
-@property (weak, nonatomic) UIButton *animationButton;
+@property (strong, nonatomic) UIButton *animationButton;
 @property (nonatomic) BOOL start;
 @property (nonatomic) BOOL played;
 @property (nonatomic) BOOL snap;
@@ -39,6 +39,7 @@
 
 @property (strong, nonatomic) UIView *sampleListView;
 @property (strong, nonatomic) UITableView *sampleListTableView;
+@property (strong, nonatomic) UIButton *backButton;
 @end
 
 @implementation EditorViewController
@@ -61,7 +62,8 @@
     UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
     UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
     UIBarButtonItem *customItem6 = [self createBarButtonWithTitle:@"+" andDelegate:@selector(add)];
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6] animated:NO];
+    UIBarButtonItem *addChannelButton = [self createBarButtonWithTitle:@"Add Ch" andDelegate:@selector(addChannel)];
+    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6,addChannelButton] animated:NO];
 }
 
 -(void)add
@@ -71,18 +73,27 @@
     
     if(_sampleListView == nil)
     {
-    _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.3f];
-    float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
-    _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
-    _sampleListTableView.backgroundColor = [UIColor whiteColor];
-    _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    _sampleListTableView.layer.borderWidth = 1.0f;
-    _sampleListTableView.layer.cornerRadius = 10.0f;
-    _sampleListTableView.delegate = self;
-    _sampleListTableView.dataSource = self;
-    [_sampleListView addSubview:_sampleListTableView];
-    [self.view addSubview:_sampleListView];
+        float Y_BCO = 13;
+        _backButton = [[UIButton alloc] initWithFrame:CGRectMake(443, Y_BCO, 20, 20)];
+        _backButton.backgroundColor = [UIColor blackColor];
+        [_backButton setTitle:@"X" forState:UIControlStateNormal];
+        _backButton.layer.cornerRadius = 1;
+        [_backButton addTarget:self action:@selector(backToEditor) forControlEvents:UIControlEventTouchUpInside];
+        
+        _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.5f];
+        float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
+        _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
+        _sampleListTableView.backgroundColor = [UIColor whiteColor];
+        _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        _sampleListTableView.layer.borderWidth = 1.0f;
+        _sampleListTableView.layer.cornerRadius = 10.0f;
+        _sampleListTableView.delegate = self;
+        _sampleListTableView.dataSource = self;
+        [_sampleListView addSubview:_sampleListTableView];
+        [_sampleListView addSubview:_backButton];
+
+        [self.view addSubview:_sampleListView];
     }
     else
     {
@@ -138,8 +149,6 @@
     for (RRSample* sample in _eventList){
         VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
         // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
-        
-#warning halp
         //s.url = sample.sampleURL;
         s.channel = sample.trackId;
         s.xvalue = sample.frame.origin.x;
@@ -185,7 +194,7 @@
 	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
                                       CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
                                       CGRectGetWidth(mainViewBounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
+                                      30)]; //CGRectGetHeight(self.toolbar.frame)
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -244,8 +253,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
     
+    //    CAGradientLayer *layer = [CAGradientLayer layer];
+    //    NSArray *colors = [NSArray arrayWithObjects:
+    //                       (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
+    //                       (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
+    //                       nil];
+    //    [layer setColors:colors];
+    //    [layer setFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
+    //    [self.view.layer insertSublayer:layer atIndex:0];
+    //    self.view.clipsToBounds = YES; // Important!
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"editorBackground.jpg"]];
     
     [self initToolbarWithButtons];
 	[self.view addSubview:self.toolbar];
@@ -254,21 +273,15 @@
     //_sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
     
     _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _animationButton.frame = CGRectMake(40, 0, 1, self.view.frame.size.width - 44);
-    [_animationButton setBackgroundColor:[UIColor blueColor]];
+    _animationButton.frame = CGRectMake(0, 0, 0.5f, self.view.frame.size.width - 30);
+    [_animationButton setBackgroundColor:[UIColor yellowColor]];
     _animationButton.layer.masksToBounds = YES;
-    _animationButton.layer.borderColor = [UIColor blueColor].CGColor;
-    _animationButton.layer.borderWidth = 1;
+    _animationButton.layer.borderColor = [UIColor yellowColor].CGColor;
+    _animationButton.layer.borderWidth = 0.5f;
     [self.view addSubview:_animationButton];
     [self.view bringSubviewToFront:_animationButton];
-    
+    _animationButton.hidden = YES;
     _index = 0;
-    
-    [self addChannel];
-    [self addChannel];
-    [self addChannel];
-    [self addChannel];
-    [self addChannel];
     [self addChannel];
 }
 
@@ -280,7 +293,7 @@
     int y = currentSample.center.y;
     int channel = 0;
     
-    for (int i = 0; i < 6; i++){
+    for (int i = 0; i < [_trackArray count]; i++){
         if (y < 40 +  (i)*separator + separator/2) {
             channel = i;
             break;
@@ -290,7 +303,7 @@
     
     
     CGRect frame = currentSample.frame;
-    frame.origin.y = channel * 40 ; //30 + channel*separator - separator/2; // o sa fie rezolvata si asta
+    frame.origin.y = channel * 40 + 1 ; //30 + channel*separator - separator/2; // o sa fie rezolvata si asta
     currentSample.frame = frame;
     currentSample.trackId = channel;
     
@@ -349,6 +362,8 @@
 
 -(void)functionTest
 {
+    _animationButton.hidden = NO;
+    [self.view bringSubviewToFront:_animationButton];
     if (!_start) {
         _start = YES;
         [self runAnimationController];
@@ -441,13 +456,29 @@
 
 -(void)addChannel
 {
-    UIView *channelView = [[UIView alloc] initWithFrame:CGRectMake(0, _index * 40, self.view.frame.size.height, 40)];
+    _animationButton.center = CGPointMake(40, _animationButton.center.y);
+    UIView *channelView = [[UIView alloc] initWithFrame:CGRectMake(0, _index * 40, 1000, 40)]; //self.view.frame.size.width
     channelView.layer.borderWidth = 0.3f;
-    channelView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    channelView.layer.borderColor = [UIColor blackColor].CGColor;
+    channelView.backgroundColor = [UIColor colorWithRed:240/255.0f green:240/255.0f blue:240/255.0f alpha:0.3f];
+    
+    UIButton *mixerButton = [[UIButton alloc] initWithFrame:CGRectMake(0, channelView.frame.origin.y, 40, 40)];
+    [mixerButton setBackgroundImage:[UIImage imageNamed:@"mixerBackground.png"] forState:UIControlStateNormal];
+    mixerButton.backgroundColor = [UIColor lightGrayColor];
+    mixerButton.layer.borderColor = [UIColor blackColor].CGColor;
+    mixerButton.layer.borderWidth = 0.3f;
+    
     [self.view addSubview:channelView];
+    [self.view addSubview:mixerButton];
     _index++;
+    
     AudioPlayer *player = [[AudioPlayer alloc] init];
     [_trackArray insertObject:player atIndex:[_trackArray count]];
+}
+
+-(void)backToEditor
+{
+    _sampleListView.hidden = YES;
 }
 
 -(void)addSample:(id)sender
@@ -468,6 +499,7 @@
 {
     _animationButton.center = CGPointMake(40, _animationButton.center.y);
     [self.view bringSubviewToFront:_animationButton];
+    _animationButton.hidden = YES;
     _start = NO;
     for(AudioPlayer *player in _trackArray)
     {
@@ -485,7 +517,6 @@
     {
         [player.audioPlayer stop];
     }
-#warning will have to preserver state before exit
     
 }
 

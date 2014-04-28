@@ -68,7 +68,7 @@
     if ([audioRecorder prepareToRecord] == YES){
         [audioRecorder record];
     }else {
-        int errorCode = CFSwapInt32HostToBig ([error code]);
+        NSInteger errorCode = CFSwapInt32HostToBig ([error code]);
         NSLog(@"Error: %@ [%4.4s])" , [error localizedDescription], (char*)&errorCode);
         
     }
