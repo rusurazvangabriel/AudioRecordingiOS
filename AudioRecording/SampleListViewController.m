@@ -35,7 +35,7 @@
     
     _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
     
-    _myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-20) style:UITableViewStylePlain];
+    _myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
     //setez ca tinta pentru datasource si delegate viewcontroller-url
     
     _myTableView.separatorColor = [UIColor clearColor];
@@ -96,8 +96,13 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    
     [super viewWillDisappear:animated]; // Or pause
-    [_rec stopPlaying];
+    for(int i = 0 ; i < [_sampleNamesArray count]; i++)
+    {
+       RRTableViewCell *auxCell = (RRTableViewCell *)[_myTableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+       [auxCell.playButton stopSample];
+    }
 }
 
 

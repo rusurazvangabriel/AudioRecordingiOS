@@ -31,6 +31,13 @@ AudioPlayer *ap;
     //[ap downloadSample:self.sampleUrl];
     [ap startPlaying:self.sampleName numberOfLoops:1 volumeLevel:1.0f];
 }
+
+- (void)stopSample
+{
+    ap = [[AudioPlayer alloc] init];
+    [ap stopPlaying];
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

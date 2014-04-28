@@ -24,8 +24,8 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         _player = [[AudioPlayer alloc] init];
         
-        RRSampleListPlayButton *playButton = [[RRSampleListPlayButton alloc] initWithFrame:CGRectMake(4, 4, 40, 40)];
-        playButton.sampleName = sampleName;
+        _playButton = [[RRSampleListPlayButton alloc] initWithFrame:CGRectMake(4, 4, 40, 40)];
+        _playButton.sampleName = sampleName;
         
         UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50,10,200,14)];
         [nameLabel setFont:[UIFont systemFontOfSize:11.0f]];
@@ -40,7 +40,7 @@
 
         [[self contentView] addSubview:nameLabel];
         [[self contentView] addSubview:duration];
-        [[self contentView] addSubview:playButton];
+        [[self contentView] addSubview:_playButton];
     }
     return self;
 }
@@ -51,6 +51,8 @@
 
     // Configure the view for the selected state
 }
+
+
 
 
 @end

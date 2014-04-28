@@ -27,6 +27,7 @@
 }
 
 @property(strong,nonatomic) AVAudioPlayer *audioPlayer;
+@property(assign,nonatomic) float volumeLevel;
 
 -(float)getSampleLengthForSamplename:(NSString*)sampleName;
 

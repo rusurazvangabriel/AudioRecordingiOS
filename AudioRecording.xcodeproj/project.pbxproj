@@ -28,6 +28,10 @@
 		8C21825E18F2B93000A108F4 /* RecordPressedImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825C18F2B93000A108F4 /* RecordPressedImage.png */; };
 		8C21825F18F2B93000A108F4 /* RecordNormalImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C21825D18F2B93000A108F4 /* RecordNormalImage.png */; };
 		8C21826518F2EF8C00A108F4 /* RRSample.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C21826418F2EF8C00A108F4 /* RRSample.m */; };
+		8C363D61190E71F600EC0190 /* playButton2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C363D60190E71F600EC0190 /* playButton2.png */; };
+		8C363D66190E75B500EC0190 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C363D65190E75B500EC0190 /* NSString+FontAwesome.m */; };
+		8C363D68190E7BD100EC0190 /* recyclebinIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C363D67190E7BD100EC0190 /* recyclebinIcon.png */; };
+		8C363D6C190E8A2800EC0190 /* RRMixerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C363D6B190E8A2800EC0190 /* RRMixerButton.m */; };
 		8C46B20F18FEE38D008EA7D5 /* RRAFJSONRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C46B20E18FEE38D008EA7D5 /* RRAFJSONRequestSerializer.m */; };
 		8C5737F318F58ED300BA8DA7 /* RRSampleListPlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5737F218F58ED300BA8DA7 /* RRSampleListPlayButton.m */; };
 		8C5737F618F5918400BA8DA7 /* RRSampleListDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5737F518F5918400BA8DA7 /* RRSampleListDeleteButton.m */; };
@@ -122,6 +126,13 @@
 		8C21825D18F2B93000A108F4 /* RecordNormalImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RecordNormalImage.png; sourceTree = "<group>"; };
 		8C21826318F2EF8C00A108F4 /* RRSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSample.h; sourceTree = "<group>"; };
 		8C21826418F2EF8C00A108F4 /* RRSample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRSample.m; sourceTree = "<group>"; };
+		8C363D60190E71F600EC0190 /* playButton2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playButton2.png; sourceTree = "<group>"; };
+		8C363D62190E750700EC0190 /* fontawesome-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "fontawesome-webfont.ttf"; sourceTree = "<group>"; };
+		8C363D64190E75B500EC0190 /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FontAwesome.h"; sourceTree = "<group>"; };
+		8C363D65190E75B500EC0190 /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FontAwesome.m"; sourceTree = "<group>"; };
+		8C363D67190E7BD100EC0190 /* recyclebinIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recyclebinIcon.png; sourceTree = "<group>"; };
+		8C363D6A190E8A2800EC0190 /* RRMixerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRMixerButton.h; sourceTree = "<group>"; };
+		8C363D6B190E8A2800EC0190 /* RRMixerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRMixerButton.m; sourceTree = "<group>"; };
 		8C46B20D18FEE38D008EA7D5 /* RRAFJSONRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRAFJSONRequestSerializer.h; sourceTree = "<group>"; };
 		8C46B20E18FEE38D008EA7D5 /* RRAFJSONRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRAFJSONRequestSerializer.m; sourceTree = "<group>"; };
 		8C5737F118F58ED300BA8DA7 /* RRSampleListPlayButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRSampleListPlayButton.h; sourceTree = "<group>"; };
@@ -285,6 +296,7 @@
 		8C0A8FEC18E2FB8F00C7C815 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8C363D60190E71F600EC0190 /* playButton2.png */,
 				8C02BC41190E527E00F563DD /* mixerBackground.png */,
 				8C02BC3F190E4EEF00F563DD /* editorBackground.jpg */,
 				8C02BC3D190E4CE200F563DD /* backgroundMain.jpg */,
@@ -306,6 +318,15 @@
 				8C90A9E9190A56FB00019688 /* RRChannel.m */,
 			);
 			name = Track;
+			sourceTree = "<group>";
+		};
+		8C363D63190E75A500EC0190 /* FontAwesome */ = {
+			isa = PBXGroup;
+			children = (
+				8C363D64190E75B500EC0190 /* NSString+FontAwesome.h */,
+				8C363D65190E75B500EC0190 /* NSString+FontAwesome.m */,
+			);
+			name = FontAwesome;
 			sourceTree = "<group>";
 		};
 		8CDE7BA018D0C21C0082FE17 = {
@@ -364,6 +385,8 @@
 		8CDE7BB318D0C21C0082FE17 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8C363D67190E7BD100EC0190 /* recyclebinIcon.png */,
+				8C363D62190E750700EC0190 /* fontawesome-webfont.ttf */,
 				8CE71EE218E5C8C800E40CBD /* Record.caf */,
 				8C0A8FEC18E2FB8F00C7C815 /* Images */,
 				8CDE7BE218D0CCB30082FE17 /* AudioPlayerViewController.h */,
@@ -495,6 +518,8 @@
 				8C5737F218F58ED300BA8DA7 /* RRSampleListPlayButton.m */,
 				8C00495C1909372200647A26 /* RRSampleAddButton.h */,
 				8C00495D1909372200647A26 /* RRSampleAddButton.m */,
+				8C363D6A190E8A2800EC0190 /* RRMixerButton.h */,
+				8C363D6B190E8A2800EC0190 /* RRMixerButton.m */,
 			);
 			name = CustomButtons;
 			sourceTree = "<group>";
@@ -502,6 +527,7 @@
 		8CF6FFD218EC72B80099CF95 /* CustomInterfaceItems */ = {
 			isa = PBXGroup;
 			children = (
+				8C363D63190E75A500EC0190 /* FontAwesome */,
 				8CFEB9BA190A92E200476190 /* New Group */,
 				8C21825218F28A3C00A108F4 /* Track */,
 				8C03E4D918EEAFED00117D48 /* CustomTableViewCell */,
@@ -622,8 +648,10 @@
 				8CF0E41018E981A60070EDC0 /* logo.png in Resources */,
 				8CF0E41218E993E20070EDC0 /* background2.jpg in Resources */,
 				8CF0E41618E998D20070EDC0 /* greenGradient.jpg in Resources */,
+				8C363D61190E71F600EC0190 /* playButton2.png in Resources */,
 				8CE71EE318E5C8C800E40CBD /* Record.caf in Resources */,
 				8C03E4DE18EEBFF900117D48 /* play.png in Resources */,
+				8C363D68190E7BD100EC0190 /* recyclebinIcon.png in Resources */,
 				8C5737F818F59BBB00BA8DA7 /* delete.png in Resources */,
 				8C0A8FEB18E2FB8400C7C815 /* Play-Disabled-icon.png in Resources */,
 				8CDE7BC018D0C21C0082FE17 /* Main.storyboard in Resources */,
@@ -649,10 +677,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C363D66190E75B500EC0190 /* NSString+FontAwesome.m in Sources */,
 				8CE71EDA18E58AD500E40CBD /* AFURLSessionManager.m in Sources */,
 				8CF6FFD618EC72E30099CF95 /* RRTextField.m in Sources */,
 				8CF6FFD118EC70100099CF95 /* RRCheckBox.m in Sources */,
 				8C90A9EA190A56FB00019688 /* RRChannel.m in Sources */,
+				8C363D6C190E8A2800EC0190 /* RRMixerButton.m in Sources */,
 				8CF0E40A18E9735C0070EDC0 /* LoginViewController.m in Sources */,
 				8CDE7BC318D0C21C0082FE17 /* MainViewController.m in Sources */,
 				8CDE7BE518D0CCB30082FE17 /* AudioPlayerViewController.m in Sources */,

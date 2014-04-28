@@ -19,6 +19,9 @@
 #import "RRTableViewCell.h"
 #import "RRSampleAddButton.h"
 
+#import "NSString+FontAwesome.h"
+#import "RRMixerButton.h"
+
 @interface EditorViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @property(strong, nonatomic) NSMutableArray *sampleNamesArray;
@@ -40,67 +43,182 @@
 @property (strong, nonatomic) UIView *sampleListView;
 @property (strong, nonatomic) UITableView *sampleListTableView;
 @property (strong, nonatomic) UIButton *backButton;
+
+@property (strong, nonatomic) NSMutableArray *colorArray;
 @end
 
 @implementation EditorViewController
 
+/*========================================================================================================================*/
+/*========================================== VIEW INITIALIZATION =========================================================*/
+/*========================================================================================================================*/
+
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"editorBackground.jpg"]];
+    
+    [self initToolbarWithButtons];
+	[self.view addSubview:self.toolbar];
+    [self initPropertiesWithBaseValues];
+    
+    _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
+    _colorArray = [[NSMutableArray alloc] initWithArray:[self getColorArray]];
+    
+    _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _animationButton.frame = CGRectMake(0, 0, 0.5f, self.view.frame.size.width - 30);
+    [_animationButton setBackgroundColor:[UIColor yellowColor]];
+    _animationButton.layer.masksToBounds = YES;
+    _animationButton.layer.borderColor = [UIColor yellowColor].CGColor;
+    _animationButton.layer.borderWidth = 0.5f;
+    [self.view addSubview:_animationButton];
+    [self.view bringSubviewToFront:_animationButton];
+    _animationButton.hidden = YES;
+    _index = 0;
+    UIButton *recycleBin = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.height - 30,self.view.frame.size.width - 28,24,24)]; // ,  , 20, 20)];
+    [recycleBin setBackgroundImage:[UIImage imageNamed:@"recyclebinIcon.png"] forState:UIControlStateNormal];
+    [self.view addSubview:recycleBin];
+    [self.view bringSubviewToFront:recycleBin];
+    
+    [self addChannel];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight);
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    if ( ! UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft duration:duration];;
+    }else
+        
+        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeRight duration:duration];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+-(void)pausePlayers
+{
+    for(AudioPlayer *player in _trackArray)
+    {
+        if ([player.audioPlayer isPlaying]) {
+            [player.audioPlayer pause];
+            [_currentlyPausedPlayers addObject:player];
+        }
+    }
+}
+
+-(void)goToMainView
+{
+    _start = NO;
+    MainViewController *mv = [[MainViewController alloc] init];
+    [self.navigationController pushViewController:mv animated:YES];
+}
+
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    for(AudioPlayer *player in _trackArray)
+    {
+        [player.audioPlayer stop];
+    }
+    
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+/*========================================================================================================================*/
+
+
+
+/*========================================================================================================================*/
+/*======================================== TOOLBAR INITIALIZATION ========================================================*/
+/*========================================================================================================================*/
+
 - (void)createToolbarItems
 {
-    UIBarButtonItem *customItem1 = [[UIBarButtonItem alloc] initWithTitle:@""
+    UIBarButtonItem *playToolbarButton = [[UIBarButtonItem alloc] initWithTitle:@"Play"
                                                                     style:UIBarButtonItemStyleBordered
                                                                    target:self
                                                                    action:@selector(functionTest)];
+    UIBarButtonItem *stopToolbarButton = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
+    UIBarButtonItem *backToolbarButton = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
+    UIBarButtonItem *snapToolbarButton = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
+    UIBarButtonItem *saveToolbarButton = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(saveProject)];
+    UIBarButtonItem *addToolbarButton = [self createBarButtonWithTitle:@"+" andDelegate:@selector(addSampleToProject)];
+    UIBarButtonItem *addChannelButton = [self createBarButtonWithTitle:@"Add Channel" andDelegate:@selector(addChannel)];
     
-    UIImage *baseImage = [UIImage imageNamed:@"play.png"];
-    UIImage *backroundImage = [baseImage stretchableImageWithLeftCapWidth:60.0 topCapHeight:60.0];
-    [customItem1 setBackgroundImage:backroundImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
-    [customItem1 setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    UIBarButtonItem *addChannelButton2 = [self createBarButtonWithTitle:@"Load" andDelegate:@selector(loadProjectFromNSData)];
     
-    UIBarButtonItem *customItem2 = [self createBarButtonWithTitle:@"Stop" andDelegate:@selector(stop)];
-    UIBarButtonItem *customItem3 = [self createBarButtonWithTitle:@"Back" andDelegate:@selector(goToMainView)];
-    UIBarButtonItem *customItem4 = [self createBarButtonWithTitle:@"Snap" andDelegate:@selector(setSnap)];
-    UIBarButtonItem *customItem5 = [self createBarButtonWithTitle:@"Save" andDelegate:@selector(save)];
-    UIBarButtonItem *customItem6 = [self createBarButtonWithTitle:@"+" andDelegate:@selector(add)];
-    UIBarButtonItem *addChannelButton = [self createBarButtonWithTitle:@"Add Ch" andDelegate:@selector(addChannel)];
-    [self.toolbar setItems:@[customItem1,customItem2,customItem3,customItem4, customItem5,customItem6,addChannelButton] animated:NO];
+    [self.toolbar setItems:@[playToolbarButton,stopToolbarButton,backToolbarButton,snapToolbarButton,saveToolbarButton, addChannelButton2, addChannelButton,addToolbarButton] animated:NO];
 }
 
--(void)add
+-(UIBarButtonItem*) createBarButtonWithTitle:(NSString*) title andDelegate:(SEL)delegate
 {
-    _sampleNamesArray = [[NSMutableArray alloc] initWithArray:[self listFileAtPath]];
-    NSLog(@"w:%f,h:%f",self.view.frame.size.width,self.view.frame.size.height);
-    
-    if(_sampleListView == nil)
-    {
-        float Y_BCO = 13;
-        _backButton = [[UIButton alloc] initWithFrame:CGRectMake(443, Y_BCO, 20, 20)];
-        _backButton.backgroundColor = [UIColor blackColor];
-        [_backButton setTitle:@"X" forState:UIControlStateNormal];
-        _backButton.layer.cornerRadius = 1;
-        [_backButton addTarget:self action:@selector(backToEditor) forControlEvents:UIControlEventTouchUpInside];
-        
-        _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.5f];
-        float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
-        _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
-        _sampleListTableView.backgroundColor = [UIColor whiteColor];
-        _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        _sampleListTableView.layer.borderWidth = 1.0f;
-        _sampleListTableView.layer.cornerRadius = 10.0f;
-        _sampleListTableView.delegate = self;
-        _sampleListTableView.dataSource = self;
-        [_sampleListView addSubview:_sampleListTableView];
-        [_sampleListView addSubview:_backButton];
+    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
+                                                                  style:UIBarButtonItemStyleBordered
+                                                                 target:self
+                                                                 action:delegate];
+    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+    return barButton;
+}
 
-        [self.view addSubview:_sampleListView];
-    }
-    else
-    {
-        [self.view bringSubviewToFront:_sampleListView];
-        _sampleListView.hidden = NO;
-    }
-};
+-(void)initToolbarWithButtons
+{
+    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+	self.toolbar.barStyle = UIBarStyleDefault;
+	// size up the toolbar and set its frame
+    [self adjustToolbarSize];
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
+                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.toolbar.frame))];
+    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
+    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
+    [self createToolbarItems];
+    
+}
+
+- (void)adjustToolbarSize
+{
+    // size up the toolbar and set its frame
+	[self.toolbar sizeToFit];
+    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
+	CGRect mainViewBounds = self.view.bounds;
+	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
+                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
+                                      CGRectGetWidth(mainViewBounds),
+                                      30)]; //CGRectGetHeight(self.toolbar.frame)
+}
+
+/*========================================================================================================================*/
+
+
+
+/*========================================================================================================================*/
+/*==================================== SAMPLE TABLE VIEW INITIALIZATION ==================================================*/
+/*========================================================================================================================*/
 
 -(NSArray *)listFileAtPath
 {
@@ -141,148 +259,220 @@
     return cell;
 }
 
+/*========================================================================================================================*/
 
--(void) save
+
+
+
+/*========================================================================================================================*/
+/*======================================== PROJECT SAVE AND LOAD =========================================================*/
+/*========================================================================================================================*/
+
+-(void) saveProject
 {
     NSLog(@"SAVE");
     NSMutableArray* sampleList = [[NSMutableArray alloc] init];
     for (RRSample* sample in _eventList){
-        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] init];
-        // WithUrl:sample.sampleURL andChannel:sample.trackId andPosition:sample.frame.origin.x];
-        //s.url = sample.sampleURL;
-        s.channel = sample.trackId;
-        s.xvalue = sample.frame.origin.x;
-        [sampleList addObject:s];
-        
-        //NSDictionary dictionary = [s dictionary];
-        // BOOL ceva = [NSJSONSerialization isValidJSONObject:s];
-        
+        VBSampleForSerialization* s = [[VBSampleForSerialization alloc] initWithUrl:sample.sampleName andChannel:sample.trackId andPosition:sample.frame.origin.x];
+     //   BOOL ceva = [NSJSONSerialization isValidJSONObject:[s dictionary]];
+        [sampleList addObject:[s dictionary]];
     }
     
-    //VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
-    //BOOL ceva = [NSJSONSerialization isValidJSONObject:project];
-    //NSData* data = [NSJSONSerialization dataWithJSONObject:project options:(0) error:nil];
+    VBProjectState *project = [[VBProjectState alloc]initWithSampleList:sampleList];
+ //   BOOL ceva = [NSJSONSerialization isValidJSONObject:[project dictionary]];
+    NSData* data = [NSJSONSerialization dataWithJSONObject:[project dictionary] options:(0) error:nil];
     
-    NSLog(@"STOP!!");
+    
+    // asta e pus de test aici, sa vad ca imi deserializeaza calumea chestia serializata
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
+    
+    NSString *savePath = [NSString stringWithFormat:@"%@%@", docPath, @"savetest"];
+    
+    [data writeToFile:savePath atomically:NO];
     
 }
 
-
--(UIBarButtonItem*) createBarButtonWithTitle:(NSString*) title andDelegate:(SEL)delegate
+/*
+ E cam intuitiv ce trebuie facut.. la saveProject NSData-ul ala trebuie salvat intr-un file ceva, iar cand dai load si il alegi sa se apeleze asta de mai jos cu NSData-ul ala. Asta iti da project
+ */
+-(void) loadProjectFromNSData
 {
-    NSDictionary *textAttributes = @{ UITextAttributeTextColor:[UIColor blackColor] };
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:title
-                                                                  style:UIBarButtonItemStyleBordered
-                                                                 target:self
-                                                                 action:delegate];
-    [barButton setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-    return barButton;
+    
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES)objectAtIndex:0];
+    
+    NSString *savePath = [NSString stringWithFormat:@"%@%@", docPath, @"savetest"];
+    
+    NSData *data1 = [[NSFileManager defaultManager] contentsAtPath:savePath];
+    
+    
+    NSDictionary* project = [NSJSONSerialization JSONObjectWithData:data1 options:NSJSONReadingMutableContainers error:nil];
+    for (NSDictionary* sample in project[@"sampleList"]){
+       
+        
+        
+        RRSample *newSample = [[RRSample alloc]initWithSampleName:sample[@"url"]
+                                                     andSampleURL:@""
+                                                       andChannel:[[sample valueForKey:@"channel"] integerValue]
+                                                             andX:[[sample valueForKey:@"xvalue"] floatValue]];
+        
+        [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+        [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+        [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:newSample];
+        [_eventList insertObject:newSample atIndex:[_eventList count]];
+        [self.view bringSubviewToFront:_animationButton];
+        
+        
+        // IMPORTANT ar fi ok sa se apeleze saveProject intr-un NSData global sau ceva de genul atunci cand te muti din ecranul asta in altul ca mai apoi sa se apeleze loadProject cand te intorci in editor, ca sa nu pierzi informatia.
+    }
+    NSLog(@"pam pam");
 }
+
+/*========================================================================================================================*/
+
+
+
+/*========================================================================================================================*/
+/*============================================== EDITOR FUNCTIONS ========================================================*/
+/*========================================================================================================================*/
+
+
+-(NSArray *)getColorArray
+{
+    NSMutableArray *auxArray = [[NSMutableArray alloc] init];
+    
+    for(int i = 0 ; i < [_sampleNamesArray count]; i++)
+    {
+        CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
+        CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
+        CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
+        UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+        [_colorArray insertObject:color atIndex:i];
+    }
+    return auxArray;
+}
+
+-(void)addSampleToProject
+{
+    
+    NSLog(@"w:%f,h:%f",self.view.frame.size.width,self.view.frame.size.height);
+    
+    if(_sampleListView == nil)
+    {
+        float Y_BCO = 13;
+        _backButton = [[UIButton alloc] initWithFrame:CGRectMake(443, Y_BCO, 20, 20)];
+        _backButton.backgroundColor = [UIColor blackColor];
+        [_backButton setTitle:@"X" forState:UIControlStateNormal];
+        _backButton.layer.cornerRadius = 1;
+        [_backButton addTarget:self action:@selector(backToEditor) forControlEvents:UIControlEventTouchUpInside];
+        
+        _sampleListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        _sampleListView.backgroundColor = [UIColor colorWithRed:0/255.0f green:1/255.0f blue:0/255.0f alpha:0.5f];
+        float x_co = (self.view.frame.size.width - self.view.frame.size.height ) / 2;
+        _sampleListTableView = [[UITableView alloc] initWithFrame:CGRectMake(x_co, 5, self.view.frame.size.height , self.view.frame.size.height - 10)];
+        _sampleListTableView.backgroundColor = [UIColor whiteColor];
+        _sampleListTableView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        _sampleListTableView.layer.borderWidth = 1.0f;
+        _sampleListTableView.layer.cornerRadius = 10.0f;
+        _sampleListTableView.delegate = self;
+        _sampleListTableView.dataSource = self;
+        [_sampleListView addSubview:_sampleListTableView];
+        [_sampleListView addSubview:_backButton];
+        
+        [self.view addSubview:_sampleListView];
+    }
+    else
+    {
+        [self.view bringSubviewToFront:_sampleListView];
+        _sampleListView.hidden = NO;
+    }
+};
+
+-(void)addChannel
+{
+    if(!_start)
+    {
+        _animationButton.center = CGPointMake(40, _animationButton.center.y);
+    }
+    UIView *channelView = [[UIView alloc] initWithFrame:CGRectMake(0, _index * 40, 1000, 40)]; //self.view.frame.size.width
+    channelView.layer.borderWidth = 0.3f;
+    channelView.layer.borderColor = [UIColor blackColor].CGColor;
+    channelView.backgroundColor = [UIColor colorWithRed:240/255.0f green:240/255.0f blue:240/255.0f alpha:0.3f];
+    
+    RRMixerButton *mixerButton = [[RRMixerButton alloc] initWithFrame:CGRectMake(0, channelView.frame.origin.y, 40, 40) andChannelId:_index];
+    [mixerButton addTarget:self action:@selector(openMixer:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:channelView];
+    [self.view addSubview:mixerButton];
+    _index++;
+    
+    AudioPlayer *player = [[AudioPlayer alloc] init];
+    player.volumeLevel = 1.0f;
+    [_trackArray insertObject:player atIndex:[_trackArray count]];
+}
+
+-(void)openMixer:(id)sender
+{
+    RRMixerButton *auxButton = (RRMixerButton *)sender;
+    AudioPlayer *auxPlayer = (AudioPlayer *)_trackArray[auxButton.channelId];
+    auxPlayer.volumeLevel = 0.5f;
+}
+
+-(void)backToEditor
+{
+    for(int i = 0 ; i < [_sampleNamesArray count]; i++)
+    {
+        RRTableViewCell *auxCell = (RRTableViewCell *)[_sampleListTableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+        [auxCell.playButton stopSample];
+    }
+    
+    _sampleListView.hidden = YES;
+}
+
+-(void)addSample:(id)sender
+{
+    RRSampleAddButton *addBtn = (RRSampleAddButton *)sender;
+    RRSample *newSample = [[RRSample alloc]initWithSampleName:addBtn.sampleName andSampleURL:@""];
+    newSample.trackId = 3;
+    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+    [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:newSample];
+    [_eventList insertObject:newSample atIndex:[_eventList count]];
+    _sampleListView.hidden = YES;
+    [self.view bringSubviewToFront:_animationButton];
+}
+
+-(void)stop
+{
+    _animationButton.center = CGPointMake(40, _animationButton.center.y);
+    [self.view bringSubviewToFront:_animationButton];
+    _animationButton.hidden = YES;
+    _start = NO;
+    for(AudioPlayer *player in _trackArray)
+    {
+        [player stopPlaying];
+    }
+    for(RRSample *object in _eventList)
+    {
+        object.triggered = NO;
+    }
+}
+
+/*========================================================================================================================*/
+
+
+
+
+/*========================================================================================================================*/
+/*======================================== PLAY ANIMATION FUNCTIONS ======================================================*/
+/*========================================================================================================================*/
+
+
 
 
 -(void)setSnap
 {
     _snap = !_snap;
-}
-
-- (void)adjustToolbarSize
-{
-    // size up the toolbar and set its frame
-	[self.toolbar sizeToFit];
-    // since the toolbar may have adjusted its height, it's origin will have to be adjusted too
-	CGRect mainViewBounds = self.view.bounds;
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(mainViewBounds),
-                                      CGRectGetMinY(mainViewBounds) + CGRectGetHeight(mainViewBounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(mainViewBounds),
-                                      30)]; //CGRectGetHeight(self.toolbar.frame)
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    objc_msgSend([UIDevice currentDevice], @selector(setOrientation:), UIInterfaceOrientationLandscapeRight);
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if ( ! UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeLeft duration:duration];;
-    }else
-        
-        [super willRotateToInterfaceOrientation:UIInterfaceOrientationLandscapeRight duration:duration];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
--(NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskLandscape;
-}
-
--(void)pausePlayers
-{
-    for(AudioPlayer *player in _trackArray)
-    {
-        if ([player.audioPlayer isPlaying]) {
-            [player.audioPlayer pause];
-            [_currentlyPausedPlayers addObject:player];
-        }
-    }
-}
-
--(void)initToolbarWithButtons
-{
-    _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	self.toolbar.barStyle = UIBarStyleDefault;
-	// size up the toolbar and set its frame
-    [self adjustToolbarSize];
-	[self.toolbar setFrame:CGRectMake(CGRectGetMinX(self.view.bounds),
-                                      CGRectGetMinY(self.view.bounds) + CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.toolbar.frame),
-                                      CGRectGetWidth(self.view.bounds),
-                                      CGRectGetHeight(self.toolbar.frame))];
-    // make so the toolbar stays to the bottom and keep the width matching the device's screen width
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    
-    [self createToolbarItems];
-    
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    //    CAGradientLayer *layer = [CAGradientLayer layer];
-    //    NSArray *colors = [NSArray arrayWithObjects:
-    //                       (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
-    //                       (id)[UIColor colorWithRed:61/255.0f green:107/255.0f blue:226/255.0f alpha:1.0f].CGColor,
-    //                       nil];
-    //    [layer setColors:colors];
-    //    [layer setFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
-    //    [self.view.layer insertSublayer:layer atIndex:0];
-    //    self.view.clipsToBounds = YES; // Important!
-    
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"editorBackground.jpg"]];
-    
-    [self initToolbarWithButtons];
-	[self.view addSubview:self.toolbar];
-    [self initPropertiesWithBaseValues];
-    
-    //_sampleNameArray = [[NSMutableArray alloc] initWithObjects:@"drums.wav",@"bass.wav", nil];
-    
-    _animationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _animationButton.frame = CGRectMake(0, 0, 0.5f, self.view.frame.size.width - 30);
-    [_animationButton setBackgroundColor:[UIColor yellowColor]];
-    _animationButton.layer.masksToBounds = YES;
-    _animationButton.layer.borderColor = [UIColor yellowColor].CGColor;
-    _animationButton.layer.borderWidth = 0.5f;
-    [self.view addSubview:_animationButton];
-    [self.view bringSubviewToFront:_animationButton];
-    _animationButton.hidden = YES;
-    _index = 0;
-    [self addChannel];
 }
 
 -(void) dragEnded:(id) sender
@@ -299,11 +489,9 @@
             break;
         }
     }
-    
-    
-    
+
     CGRect frame = currentSample.frame;
-    frame.origin.y = channel * 40 + 1 ; //30 + channel*separator - separator/2; // o sa fie rezolvata si asta
+    frame.origin.y = channel * 40 + 1 ;
     currentSample.frame = frame;
     currentSample.trackId = channel;
     
@@ -422,7 +610,7 @@
     
     NSLog(@"%f",self.view.frame.size.height);
     
-    if(aux.frame.origin.y + aux.frame.size.height >= self.view.frame.size.height)
+    if((aux.frame.origin.y + aux.frame.size.height >= self.view.frame.size.height - 30) && (aux.frame.origin.x + aux.frame.size.width >= self.view.frame.size.width - 30))
     {
         [aux removeFromSuperview];
         for(RRSample *item in _eventList) {
@@ -447,83 +635,8 @@
     }
 }
 
--(void)goToMainView
-{
-    _start = NO;
-    MainViewController *mv = [[MainViewController alloc] init];
-    [self.navigationController pushViewController:mv animated:YES];
-}
 
--(void)addChannel
-{
-    _animationButton.center = CGPointMake(40, _animationButton.center.y);
-    UIView *channelView = [[UIView alloc] initWithFrame:CGRectMake(0, _index * 40, 1000, 40)]; //self.view.frame.size.width
-    channelView.layer.borderWidth = 0.3f;
-    channelView.layer.borderColor = [UIColor blackColor].CGColor;
-    channelView.backgroundColor = [UIColor colorWithRed:240/255.0f green:240/255.0f blue:240/255.0f alpha:0.3f];
-    
-    UIButton *mixerButton = [[UIButton alloc] initWithFrame:CGRectMake(0, channelView.frame.origin.y, 40, 40)];
-    [mixerButton setBackgroundImage:[UIImage imageNamed:@"mixerBackground.png"] forState:UIControlStateNormal];
-    mixerButton.backgroundColor = [UIColor lightGrayColor];
-    mixerButton.layer.borderColor = [UIColor blackColor].CGColor;
-    mixerButton.layer.borderWidth = 0.3f;
-    
-    [self.view addSubview:channelView];
-    [self.view addSubview:mixerButton];
-    _index++;
-    
-    AudioPlayer *player = [[AudioPlayer alloc] init];
-    [_trackArray insertObject:player atIndex:[_trackArray count]];
-}
+/*========================================================================================================================*/
 
--(void)backToEditor
-{
-    _sampleListView.hidden = YES;
-}
-
--(void)addSample:(id)sender
-{
-    RRSampleAddButton *addBtn = (RRSampleAddButton *)sender;
-    RRSample *newSample = [[RRSample alloc]initWithSampleName:addBtn.sampleName andSampleURL:@""];
-    newSample.trackId = 3;
-    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragInside];
-    [newSample addTarget:self action:@selector(imageMoved:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
-    [newSample addTarget:self action:@selector(dragEnded:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:newSample];
-    [_eventList insertObject:newSample atIndex:[_eventList count]];
-    _sampleListView.hidden = YES;
-    [self.view bringSubviewToFront:_animationButton];
-}
-
--(void)stop
-{
-    _animationButton.center = CGPointMake(40, _animationButton.center.y);
-    [self.view bringSubviewToFront:_animationButton];
-    _animationButton.hidden = YES;
-    _start = NO;
-    for(AudioPlayer *player in _trackArray)
-    {
-        [player stopPlaying];
-    }
-    for(RRSample *object in _eventList)
-    {
-        object.triggered = NO;
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    for(AudioPlayer *player in _trackArray)
-    {
-        [player.audioPlayer stop];
-    }
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AudioPlayer.h"
+#import "RRSampleListPlayButton.h"
 
 @interface RRTableViewCell : UITableViewCell
 @property (nonatomic, weak)  UILabel *nameLabel;
@@ -15,5 +16,6 @@
 @property (nonatomic, assign) NSString *sampleName;
 - (id)initWithStyle:(UITableViewCellStyle)style andSampleName:(NSString *)sampleName reuseIdentifier:(NSString *)reuseIdentifier;
 @property (nonatomic, strong) AudioPlayer *player;
+@property (nonatomic, strong) RRSampleListPlayButton *playButton;
 
 @end
