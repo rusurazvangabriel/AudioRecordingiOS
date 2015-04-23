@@ -12,9 +12,15 @@
 @interface LoginView () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 - (IBAction)logoutMethod:(UIButton *)sender;
 
+@property (strong, nonatomic) UITableView *tabel;
+@property (strong, nonatomic) NSArray *dataSource;
+
 @end
 
-@implementation LoginView
+@implementation LoginView {
+    NSArray *tableData;
+}
+static NSString *CellIdentifier = @"CellIdentifier";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -34,6 +40,76 @@
         // Present the log in view controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }
+}
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    self.view.backgroundColor=[UIColor blueColor];
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    PFQuery *query = [PFQuery queryWithClassName:@"Shaormerii"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(objects.count>0){
+            tableData = objects;
+            [self.tableView reloadData];
+        }
+    }];
+    //    self.dataSource = @[
+    //                        @{ @"title" : @"Gravity", @"year" : @(2013) },
+    //                        @{ @"title" : @"12 Years a Slave", @"year" : @(2013) },
+    //                        @{ @"title" : @"Before Midnight", @"year" : @(2013) },
+    //                        @{ @"title" : @"American Hustle", @"year" : @(2013) },
+    //                        @{ @"title" : @"Blackfish", @"year" : @(2013) },
+    //                        @{ @"title" : @"Captain Phillips", @"year" : @(2013) },
+    //                        @{ @"title" : @"Nebraska", @"year" : @(2013) },
+    //                        @{ @"title" : @"Rush", @"year" : @(2013) },
+    //                        @{ @"title" : @"Frozen", @"year" : @(2013) },
+    //                        @{ @"title" : @"Star Trek Into Darkness", @"year" : @(2013) },
+    //                        @{ @"title" : @"The Conjuring", @"year" : @(2013) },
+    //                        @{ @"title" : @"Side Effects", @"year" : @(2013) },
+    //                        @{ @"title" : @"The Attack", @"year" : @(2013) },
+    //                        @{ @"title" : @"The Hobbit", @"year" : @(2013) },
+    //                        @{ @"title" : @"We Are What We Are", @"year" : @(2013) },
+    //                        @{ @"title" : @"Something in the Air", @"year" : @(2013) }
+    //                        ];
+    [self.tableView reloadData];
+}
+
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView{
+    return tableData ? 1 : 0;
+}
+
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return tableData? tableData.count : 0;
+}
+
+- (void)didTapButton:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 100;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RButtonCell *cell = (RButtonCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath: indexPath];
+    
+    PFObject *item = [tableData objectAtIndex:indexPath.row];
+    [cell.titleLabel setText:[NSString stringWithFormat:@"%@", item[@"name"]]];
+    //    [cell.actionButton addTarget:self action:@selector(didTapButton:) forControlEvents:UIControlEventTouchDragInside];
+    cell.imageLabel.image = [UIImage imageNamed:@"ciorba.png"];
+    [cell.yearLabel setText:[NSString stringWithFormat:@"%@", item[@"rating"]]];
+    //    static NSString *simpleTableIdentifier = @"SimpleTableItem";
+    //
+    //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+    //
+    //    if (cell == nil) {
+    //        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    //    }
+    //
+    //    cell.textLabel.text = [tableData objectAtIndex:indexPath.row];
+    //    cell.imageView.image = [UIImage imageNamed:@"ciorba.png"];
+    return cell;
 }
 
 - (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password {
@@ -112,14 +188,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (IBAction)logoutMethod:(UIButton *)sender {
     [PFUser logOut];

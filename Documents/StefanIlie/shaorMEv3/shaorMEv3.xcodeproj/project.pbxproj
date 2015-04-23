@@ -27,6 +27,8 @@
 		8C2E86CD1ACC2C4B00732B93 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2E86C91ACC2C4B00732B93 /* StoreKit.framework */; };
 		8C2E86CE1ACC2C4B00732B93 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2E86CA1ACC2C4B00732B93 /* SystemConfiguration.framework */; };
 		8C2E86D01ACC2C5300732B93 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2E86CF1ACC2C5300732B93 /* libsqlite3.dylib */; };
+		8C42861E1AE92D92005A640F /* ciorba.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C42861D1AE92D92005A640F /* ciorba.png */; };
+		8C4286241AE931EE005A640F /* RButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C4286231AE931EE005A640F /* RButtonCell.m */; };
 		8C7153931ACC303000854757 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7153921ACC303000854757 /* libz.1.1.3.dylib */; };
 		8C7153951ACC306C00854757 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7153941ACC306C00854757 /* Bolts.framework */; };
 		8C71539C1ACC365E00854757 /* LoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C71539B1ACC365E00854757 /* LoginView.m */; };
@@ -71,6 +73,9 @@
 		8C2E86C91ACC2C4B00732B93 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		8C2E86CA1ACC2C4B00732B93 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8C2E86CF1ACC2C5300732B93 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		8C42861D1AE92D92005A640F /* ciorba.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ciorba.png; path = ../../../../Desktop/ciorba.png; sourceTree = "<group>"; };
+		8C4286221AE931EE005A640F /* RButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RButtonCell.h; path = ../RButtonCell.h; sourceTree = "<group>"; };
+		8C4286231AE931EE005A640F /* RButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RButtonCell.m; path = ../RButtonCell.m; sourceTree = "<group>"; };
 		8C7153921ACC303000854757 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		8C7153941ACC306C00854757 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		8C71539A1ACC365E00854757 /* LoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginView.h; sourceTree = "<group>"; };
@@ -152,10 +157,13 @@
 		8C2E868E1ACC29B300732B93 /* shaorMEv3 */ = {
 			isa = PBXGroup;
 			children = (
+				8C42861D1AE92D92005A640F /* ciorba.png */,
 				8C2E86931ACC29B300732B93 /* AppDelegate.h */,
 				8C2E86941ACC29B300732B93 /* AppDelegate.m */,
 				8C71539A1ACC365E00854757 /* LoginView.h */,
 				8C71539B1ACC365E00854757 /* LoginView.m */,
+				8C4286221AE931EE005A640F /* RButtonCell.h */,
+				8C4286231AE931EE005A640F /* RButtonCell.m */,
 				8C2E86961ACC29B300732B93 /* ViewController.h */,
 				8C2E86971ACC29B300732B93 /* ViewController.m */,
 				8C2E86991ACC29B300732B93 /* Main.storyboard */,
@@ -272,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C42861E1AE92D92005A640F /* ciorba.png in Resources */,
 				8C2E869B1ACC29B300732B93 /* Main.storyboard in Resources */,
 				8C2E86A01ACC29B300732B93 /* LaunchScreen.xib in Resources */,
 				8C2E869D1ACC29B300732B93 /* Images.xcassets in Resources */,
@@ -294,6 +303,7 @@
 			files = (
 				8C2E86981ACC29B300732B93 /* ViewController.m in Sources */,
 				8C2E86951ACC29B300732B93 /* AppDelegate.m in Sources */,
+				8C4286241AE931EE005A640F /* RButtonCell.m in Sources */,
 				8C71539C1ACC365E00854757 /* LoginView.m in Sources */,
 				8C2E86921ACC29B300732B93 /* main.m in Sources */,
 			);

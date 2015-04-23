@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "RButtonCell.h"
 
-@interface LoginView : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
+@interface LoginView : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 
 @end
