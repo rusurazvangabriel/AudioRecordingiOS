@@ -54,24 +54,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
             [self.tableView reloadData];
         }
     }];
-    //    self.dataSource = @[
-    //                        @{ @"title" : @"Gravity", @"year" : @(2013) },
-    //                        @{ @"title" : @"12 Years a Slave", @"year" : @(2013) },
-    //                        @{ @"title" : @"Before Midnight", @"year" : @(2013) },
-    //                        @{ @"title" : @"American Hustle", @"year" : @(2013) },
-    //                        @{ @"title" : @"Blackfish", @"year" : @(2013) },
-    //                        @{ @"title" : @"Captain Phillips", @"year" : @(2013) },
-    //                        @{ @"title" : @"Nebraska", @"year" : @(2013) },
-    //                        @{ @"title" : @"Rush", @"year" : @(2013) },
-    //                        @{ @"title" : @"Frozen", @"year" : @(2013) },
-    //                        @{ @"title" : @"Star Trek Into Darkness", @"year" : @(2013) },
-    //                        @{ @"title" : @"The Conjuring", @"year" : @(2013) },
-    //                        @{ @"title" : @"Side Effects", @"year" : @(2013) },
-    //                        @{ @"title" : @"The Attack", @"year" : @(2013) },
-    //                        @{ @"title" : @"The Hobbit", @"year" : @(2013) },
-    //                        @{ @"title" : @"We Are What We Are", @"year" : @(2013) },
-    //                        @{ @"title" : @"Something in the Air", @"year" : @(2013) }
-    //                        ];
+    
     [self.tableView reloadData];
 }
 
@@ -83,9 +66,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     return tableData? tableData.count : 0;
 }
 
-- (void)didTapButton:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 100;
@@ -96,19 +76,14 @@ static NSString *CellIdentifier = @"CellIdentifier";
     
     PFObject *item = [tableData objectAtIndex:indexPath.row];
     [cell.titleLabel setText:[NSString stringWithFormat:@"%@", item[@"name"]]];
-    //    [cell.actionButton addTarget:self action:@selector(didTapButton:) forControlEvents:UIControlEventTouchDragInside];
-    cell.imageLabel.image = [UIImage imageNamed:@"ciorba.png"];
+    PFFile *file = item[@"image"];
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        if(!error){
+            cell.imageLabel.image = [UIImage imageWithData:data];
+            
+        }
+    }];
     [cell.yearLabel setText:[NSString stringWithFormat:@"%@", item[@"rating"]]];
-    //    static NSString *simpleTableIdentifier = @"SimpleTableItem";
-    //
-    //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    //
-    //    if (cell == nil) {
-    //        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
-    //    }
-    //
-    //    cell.textLabel.text = [tableData objectAtIndex:indexPath.row];
-    //    cell.imageView.image = [UIImage imageNamed:@"ciorba.png"];
     return cell;
 }
 
