@@ -24,7 +24,7 @@
             </objects>
             <point key="canvasLocation" x="898.13333333333333" y="1282.7333333333333"/>
         </scene>
-        <!--Item-->
+        <!--Discover-->
         <scene sceneID="Hzs-uF-F7h">
             <objects>
                 <viewController id="V60-6D-IYJ" customClass="LoginView" sceneMemberID="viewController">
@@ -99,7 +99,7 @@
                             <constraint firstAttribute="trailing" secondItem="vY9-mC-M4u" secondAttribute="trailing" id="QBh-aA-qnr"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="zFA-zZ-ekt"/>
+                    <tabBarItem key="tabBarItem" title="Discover" id="zFA-zZ-ekt"/>
                     <navigationItem key="navigationItem" id="T8v-13-hej"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -110,10 +110,10 @@
             </objects>
             <point key="canvasLocation" x="898" y="-270"/>
         </scene>
-        <!--Item 1-->
+        <!--Add Item-->
         <scene sceneID="Awi-y3-bEh">
             <objects>
-                <viewController id="xmj-ab-0wR" sceneMemberID="viewController">
+                <viewController id="xmj-ab-0wR" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="WRh-yz-h9r"/>
                         <viewControllerLayoutGuide type="bottom" id="Ugg-Lh-xkq"/>
@@ -121,9 +121,47 @@
                     <view key="view" contentMode="scaleToFill" id="PBX-fb-fhO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cvI-SF-l4k">
+                                <rect key="frame" x="112" y="109" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cje-Zf-ar8">
+                                <rect key="frame" x="144" y="80" width="33" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bun-EN-9HL">
+                                <rect key="frame" x="112" y="178" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="N5W-pD-kQR">
+                                <rect key="frame" x="112" y="259" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="QEO-gM-A14">
+                                <rect key="frame" x="113" y="320" width="94" height="29"/>
+                            </stepper>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adress" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qbt-Oi-1Wg">
+                                <rect key="frame" x="134" y="149" width="53" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYJ-8W-mVu">
+                                <rect key="frame" x="135" y="230" width="50" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="lSv-Yb-bx1"/>
+                    <tabBarItem key="tabBarItem" title="Add Item" id="lSv-Yb-bx1"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uk0-SU-eak" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

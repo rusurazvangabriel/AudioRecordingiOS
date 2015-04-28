@@ -7,6 +7,7 @@
 //
 
 #import "LoginView.h"
+#import "ViewController.h"
 
 
 @interface LoginView () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
@@ -44,7 +45,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    self.view.backgroundColor=[UIColor blueColor];
+    self.view.backgroundColor=[UIColor greenColor];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     PFQuery *query = [PFQuery queryWithClassName:@"Shaormerii"];
@@ -54,7 +55,19 @@ static NSString *CellIdentifier = @"CellIdentifier";
             [self.tableView reloadData];
         }
     }];
-    
+//    PFObject *newShaormerie = [PFObject objectWithClassName:@"Shaormerii"];
+//    newShaormerie[@"name"]=@"§KebabMania Kogalniceanu";
+//    newShaormerie[@"rating"]=@3.5;
+//    newShaormerie[@"averagePrice"]=@7;
+//    newShaormerie[@"noCheckIn"]=@180;
+//    [newShaormerie saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if(succeeded){
+//            NSLog(@"UPLOAD SUCCESFUL!!!!!!!");
+//        }
+//        else{
+//            NSLog(@"NOPE!!!!!!!!!!!!!");
+//        }
+//    }];
     [self.tableView reloadData];
 }
 
@@ -80,7 +93,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if(!error){
             cell.imageLabel.image = [UIImage imageWithData:data];
-            
         }
     }];
     [cell.yearLabel setText:[NSString stringWithFormat:@"%@", item[@"rating"]]];
@@ -116,7 +128,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
 // Sent to the delegate to determine whether the sign up request should be submitted to the server.
 - (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info {
     BOOL informationComplete = YES;
@@ -142,11 +153,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
     return informationComplete;
 }
 
-// Sent to the delegate when a PFUser is signed up.
-- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-    [self dismissModalViewControllerAnimated:YES]; // Dismiss the PFSignUpViewController
-}
-
 // Sent to the delegate when the sign up attempt fails.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
     NSLog(@"Failed to sign up...");
@@ -160,6 +166,22 @@ static NSString *CellIdentifier = @"CellIdentifier";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}		
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //fa un dic cu chestiile pe care trebuie sa le trimiti la noul view
+    //fa un object de tipul viewului pe care trebuie sa le incarce
+    //instantiaza-l cu dictu cu chestii de trimis
+    //incarca viewul acela
+//    
+//    ViewController *viewctrl = [[ViewController alloc] init];
+//    UINavigationController *navCtrl = [[UINavigationController alloc] init];
+//    [navCtrl pushViewController:viewctrl animated:YES];
+    UIAlertView *messageAlert = [[UIAlertView alloc]
+                                 initWithTitle:@"Alerta" message:[NSString stringWithFormat:@"%@ %@", @"Ai selectat shaormeria ", @"kebab"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    
+    // Display Alert Message
+    [messageAlert show];
 }
 
 /*
@@ -190,4 +212,6 @@ static NSString *CellIdentifier = @"CellIdentifier";
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }
 }
+
+
 @end

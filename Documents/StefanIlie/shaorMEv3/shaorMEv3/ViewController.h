@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
 
-@interface ViewController : UIViewController
-
+@interface ViewController : UIViewController{
+    IBOutlet UITextField *txtName;
+    IBOutlet UITextField *txtAdress;
+    IBOutlet UITextField *txtRating;
+}
 
 @end
 
+	
