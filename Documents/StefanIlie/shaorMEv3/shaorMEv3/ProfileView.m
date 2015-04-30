@@ -7,6 +7,12 @@
 //
 
 #import "ProfileView.h"
+#define UIColorFromRGB(rgbValue) \
+[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+alpha:1.0]
+
 
 @interface ProfileView ()<PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 - (IBAction)logoutMethod:(UIButton *)sender;
@@ -27,10 +33,10 @@
     [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         imgProfile.image= [UIImage imageWithData:data];
     }];
-    
 
     imgProfile.layer.cornerRadius = imgProfile.frame.size.height/2;
     imgProfile.layer.masksToBounds = YES;
+    btnLogout.backgroundColor = UIColorFromRGB(0xc0392b);
 }
 
 - (void)didReceiveMemoryWarning {
