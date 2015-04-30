@@ -13,6 +13,11 @@
     IBOutlet UITextField *txtName;
     IBOutlet UITextField *txtAdress;
     IBOutlet UITextField *txtRating;
+    IBOutlet UIStepper *increment;
+    IBOutlet UIButton *btnUpload;
+    IBOutlet UIImageView *imgUpload;
+    IBOutlet UIButton *btnImageSelect;
+    IBOutlet UILabel *lblRating;
 }
 
 @end

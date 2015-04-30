@@ -34,6 +34,7 @@
 		8C71539C1ACC365E00854757 /* LoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C71539B1ACC365E00854757 /* LoginView.m */; };
 		8C71539E1ACC410300854757 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C71539D1ACC410300854757 /* UIKit.framework */; };
 		8C7153A01ACC417900854757 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C71539F1ACC417900854757 /* Parse.framework */; };
+		8C9C86521AF142A8009F0857 /* ProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C9C86511AF142A8009F0857 /* ProfileView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,8 @@
 		8C71539B1ACC365E00854757 /* LoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginView.m; sourceTree = "<group>"; };
 		8C71539D1ACC410300854757 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8C71539F1ACC417900854757 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		8C9C86501AF142A8009F0857 /* ProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileView.h; sourceTree = "<group>"; };
+		8C9C86511AF142A8009F0857 /* ProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +163,8 @@
 				8C42861D1AE92D92005A640F /* ciorba.png */,
 				8C2E86931ACC29B300732B93 /* AppDelegate.h */,
 				8C2E86941ACC29B300732B93 /* AppDelegate.m */,
+				8C9C86501AF142A8009F0857 /* ProfileView.h */,
+				8C9C86511AF142A8009F0857 /* ProfileView.m */,
 				8C71539A1ACC365E00854757 /* LoginView.h */,
 				8C71539B1ACC365E00854757 /* LoginView.m */,
 				8C4286221AE931EE005A640F /* RButtonCell.h */,
@@ -305,6 +310,7 @@
 				8C2E86951ACC29B300732B93 /* AppDelegate.m in Sources */,
 				8C4286241AE931EE005A640F /* RButtonCell.m in Sources */,
 				8C71539C1ACC365E00854757 /* LoginView.m in Sources */,
+				8C9C86521AF142A8009F0857 /* ProfileView.m in Sources */,
 				8C2E86921ACC29B300732B93 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

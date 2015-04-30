@@ -8,7 +8,11 @@
 
 #import "LoginView.h"
 #import "ViewController.h"
-
+#define UIColorFromRGB(rgbValue) \
+[UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+alpha:1.0]
 
 @interface LoginView () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 - (IBAction)logoutMethod:(UIButton *)sender;
@@ -45,7 +49,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    self.view.backgroundColor=[UIColor greenColor];
+    self.view.backgroundColor = UIColorFromRGB(0xe67e22);
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     PFQuery *query = [PFQuery queryWithClassName:@"Shaormerii"];
@@ -55,19 +59,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
             [self.tableView reloadData];
         }
     }];
-//    PFObject *newShaormerie = [PFObject objectWithClassName:@"Shaormerii"];
-//    newShaormerie[@"name"]=@"§KebabMania Kogalniceanu";
-//    newShaormerie[@"rating"]=@3.5;
-//    newShaormerie[@"averagePrice"]=@7;
-//    newShaormerie[@"noCheckIn"]=@180;
-//    [newShaormerie saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if(succeeded){
-//            NSLog(@"UPLOAD SUCCESFUL!!!!!!!");
-//        }
-//        else{
-//            NSLog(@"NOPE!!!!!!!!!!!!!");
-//        }
-//    }];
+    self.tableView.backgroundColor =UIColorFromRGB(0xf1c40f);
     [self.tableView reloadData];
 }
 
@@ -96,6 +88,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
         }
     }];
     [cell.yearLabel setText:[NSString stringWithFormat:@"%@", item[@"rating"]]];
+    cell.backgroundColor = UIColorFromRGB(0xf1c40f);
     return cell;
 }
 
@@ -178,7 +171,7 @@ static NSString *CellIdentifier = @"CellIdentifier";
 //    UINavigationController *navCtrl = [[UINavigationController alloc] init];
 //    [navCtrl pushViewController:viewctrl animated:YES];
     UIAlertView *messageAlert = [[UIAlertView alloc]
-                                 initWithTitle:@"Alerta" message:[NSString stringWithFormat:@"%@ %@", @"Ai selectat shaormeria ", @"kebab"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                 initWithTitle:@"Felicitari!" message:@"Ai selectat o shaormerie!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
     // Display Alert Message
     [messageAlert show];
